@@ -5,5 +5,5 @@ pragma solidity >=0.5.16 <0.9.0;
 interface IRental {
 
     // Rent Car function with uid and renter's address
-    function rentCar(uint _uid, address payable renter) external payable returns(bool);
+    function rentCar(uint _uid, address payable renter, uint datetime) external payable returns(bool);
 }
