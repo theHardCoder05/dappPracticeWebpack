@@ -7,10 +7,9 @@ contract("Car Rental", function (accounts) {
     const [_owner, alice, bob] = accounts;
     const emptyAddress = "0x0000000000000000000000000000000000000000";
   
-    const fee = "1000";
-    const excessAmount = "2000";
+    const deposit = "1000";
     const carName = "BMW";
-  
+    const uid = 001;
     let instance;
   
     beforeEach(async () => {
@@ -72,7 +71,7 @@ contract("Car Rental", function (accounts) {
         it("should have a `name`", () => {
             assert(
               isDefined(subjectStruct)("name"), 
-              "Struct Item should have a `name` member"
+              "Struct Car should have a `name` member"
             );
             assert(
               isType(subjectStruct)("name")("string"), 
@@ -80,14 +79,36 @@ contract("Car Rental", function (accounts) {
             );
           });
 
-          it("should have a `fee`", () => {
+          it("should have a `deposit`", () => {
             assert(
-              isDefined(subjectStruct)("fee"), 
-              "Struct Item should have a `fee` member"
+              isDefined(subjectStruct)("deposit"), 
+              "Struct Car should have a `deposit` member"
             );
             assert(
-              isType(subjectStruct)("fee")("uint"), 
-              "`fee` should be of type `uint`"
+              isType(subjectStruct)("deposit")("uint"), 
+              "`deposit` should be of type `uint`"
+            );
+          });
+
+          it("should have a `uid`", () => {
+            assert(
+              isDefined(subjectStruct)("uid"), 
+              "Struct Car should have a `uid` member"
+            );
+            assert(
+              isType(subjectStruct)("uid")("uint"), 
+              "`uid` should be of type `uint`"
+            );
+          });
+
+          it("should have a `duration`", () => {
+            assert(
+              isDefined(subjectStruct)("duration"), 
+              "Struct Car should have a `duration` member"
+            );
+            assert(
+              isType(subjectStruct)("duration")("uint"), 
+              "`duration` should be of type `uint`"
             );
           });
      
@@ -95,7 +116,7 @@ contract("Car Rental", function (accounts) {
           it("should have a `state`", () => {
             assert(
               isDefined(subjectStruct)("state"), 
-              "Struct Item should have a `state` member"
+              "Struct Car should have a `state` member"
             );
             assert(
               isType(subjectStruct)("state")("State"), 
@@ -106,7 +127,7 @@ contract("Car Rental", function (accounts) {
           it("should have a `renter`", () => {
             assert(
               isDefined(subjectStruct)("renter"), 
-              "Struct Item should have a `renter` member"
+              "Struct Car should have a `renter` member"
             );
             assert(
               isType(subjectStruct)("renter")("address"), 
@@ -121,7 +142,7 @@ contract("Car Rental", function (accounts) {
           it("should have a `owner`", () => {
             assert(
               isDefined(subjectStruct)("owner"), 
-              "Struct Item should have a `owner` member"
+              "Struct Car should have a `owner` member"
             );
             assert(
               isType(subjectStruct)("owner")("address"), 
@@ -137,36 +158,16 @@ contract("Car Rental", function (accounts) {
  
     // Unit test cases
     describe("Use cases", () => {
-        it("should add an item with the provided name and price", async () => {
-          await instance.addItem(carName, fee, { from: alice });
+        it("should add a new Car with CarName, Deposit and Uid", async () => {
+          await instance.addNewCar(carName, deposit, uid, { from: alice });
     
-          const result = await instance.fetchItem.call(0);
-    
+          const result = await instance.fetchCar.call(001);
           assert.equal(
             result[0],
             carName,
-            "the carName of the last added item does not match the expected value",
+            "the carName of the last added Car does not match the expected value",
           );
-          assert.equal(
-            result[2].toString(10),
-            price,
-            "the price of the last added item does not match the expected value",
-          );
-          assert.equal(
-            result[3].toString(10),
-            SupplyChain.State.ForSale,
-            'the state of the item should be "For Sale"',
-          );
-          assert.equal(
-            result[4],
-            alice,
-            "the address adding the item should be listed as the seller",
-          );
-          assert.equal(
-            result[5],
-            emptyAddress,
-            "the buyer address should be set to 0 when an item is added",
-          );
+        
         });
     
       });

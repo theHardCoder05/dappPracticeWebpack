@@ -1,17 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.5.16 <0.9.0;
 
-// Interface of the library class.
+// IRental inteface a blueprint of the Rental class
 interface IRental {
-    
-    // getting status
-    function getStatus() external view returns (uint);
-    // get all the cars from library
-    function getAllCars() external returns (bytes32 [] memory);
-    // rent car
-    function rentCar(bytes32 name, uint256 book_id) external;
-    // return car
-    function returnCar() external;
-    
-    
+
+    // add new car function 
+    function addNewCar(string calldata _carName, uint _deposit, uint _uid) external returns(bool);
+
+    // fetch car in stock
+    function fetchCar(uint _uid) external view returns (string memory , uint, uint);
 }
