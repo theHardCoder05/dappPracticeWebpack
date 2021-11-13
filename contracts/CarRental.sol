@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.5.16 <0.9.0;
+import './ICar.sol';
 import './IRental.sol';
-
-contract CarRental is ICar {
+contract CarRental is ICar, IRental {
     // owner of the smart contract
     address public owner;
 
@@ -12,12 +12,14 @@ contract CarRental is ICar {
     // Enum status for car 
     enum RentalState {Vacant, Occuppied }
 
-    // Constant values
+    // rental_id 
+    uint rentalId;
+    // Constant values - 2 weeks
     uint constant Duration = 14;
     // Cars records
-    mapping(uint => Car) Cars;
+    mapping(uint => Car) public Cars;
     // Rental records
-    mapping(address => Car) Rentals;
+    mapping(address => Rental) public Rentals;
     // events for car rental
     event LogForRent(uint id);
 
@@ -27,7 +29,9 @@ contract CarRental is ICar {
     // event Car rental contract created
     event LogForCreated(address add);
   
- 
+    // event log for Rental
+    event LogRentCar(Rental);
+
     // Car Struct
     struct Car {
         uint uid;
@@ -40,9 +44,11 @@ contract CarRental is ICar {
 
     // Rental Struct
     struct Rental {
+        uint id;
         uint datetime;
         address payable renter;
         uint duration;
+        uint receivedAmount;
     }
 
     // Only Owner
@@ -60,6 +66,7 @@ contract CarRental is ICar {
     // public constructor
     constructor() public  {
         owner = msg.sender;
+        rentalId = 0;
         emit LogForCreated(address(this));
     }
 
@@ -83,7 +90,7 @@ function addNewCar(string calldata _carName, uint _price, uint _uid, uint _year)
     return true;
 }
 
-
+// Fetch car by uid
 function fetchCar(uint _uid) external view 
      returns (uint Uid, string memory carName, uint price, uint state, uint year) 
    { 
@@ -93,8 +100,30 @@ function fetchCar(uint _uid) external view
     state = uint(Cars[_uid].state); 
     year  = Cars[_uid].year; 
 
-  
      return (Uid, carName, price, state, year); 
   } 
 
+
+// Rent car function with uid and renter's address
+// datetime pass-in from external not to use timestamp in Solidity to avoid timestamp hacks.
+function rentCar(uint _uid, address payable _renter, uint _datetime) external payable returns(bool) {
+    uint256 amount = msg.value;
+    Rentals[_renter] = Rental({
+    id: rentalId,
+    datetime: _datetime,
+    duration: Duration,
+    receivedAmount:amount,
+    renter: _renter
+    });
+    
+    emit LogRentCar(Rentals[_renter]);
+    return true;
+    
 }
+
+}
+
+
+
+
+
