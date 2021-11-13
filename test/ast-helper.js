@@ -1,13 +1,14 @@
+
 // Novel way to drive behavior of Smart Contract.
 
 // 
 const CDTYPE = "ContractDefinition";
-const CNAME = "SupplyChain";
+const CNAME = "CarRental";
 const contractDefn = ca =>
   ca.ast.nodes.find(n => n.nodeType === CDTYPE && n.name === CNAME);
 
-const items = (ca) => {
-  const item = contractDefn(ca).nodes.find((n) => n.name === "Item");
+const cars = (ca) => {
+  const item = contractDefn(ca).nodes.find((n) => n.name === "Car");
   if (!item) return null;
 
   return item
@@ -40,8 +41,9 @@ const isType = members => variableName => type => {
 };
 
 module.exports = {
-  items,
+  cars,
   isDefined,
   isPayable,
   isType,
 };
+
