@@ -71,8 +71,8 @@ window.addEventListener("load", function() {
       new Web3.providers.HttpProvider("http://127.0.0.1:8545"),
     );
   }
-  const currentAddress = document.getElementById("sender");
-  currentAddress.value = App.web3.currentProvider.selectedAddress;
+  const sender = document.getElementById("sender");
+  sender.value = App.web3.currentProvider.selectedAddress;
 
   App.start();
 });
