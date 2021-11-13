@@ -2,15 +2,22 @@
 pragma solidity >=0.5.16 <0.9.0;
 import './IRental.sol';
 
-contract CarRental is IRental {
+contract CarRental is ICar {
+    // owner of the smart contract
     address public owner;
-    // Enum status for car rental
-    enum State {ForRent, Occuppied, UnderMaintenance }
+
+    // Enum status for car 
+    enum State {ForRent, UnderMaintenance }
+
+    // Enum status for car 
+    enum RentalState {Vacant, Occuppied }
+
     // Constant values
     uint constant Duration = 14;
     // Cars records
     mapping(uint => Car) Cars;
-
+    // Rental records
+    mapping(address => Car) Rentals;
     // events for car rental
     event LogForRent(uint id);
 
@@ -23,12 +30,18 @@ contract CarRental is IRental {
  
     // Car Struct
     struct Car {
-        string name;
-        uint deposit;
         uint uid;
+        string name;
+        uint price;
         State state;
+        uint year;
+       
+    }
+
+    // Rental Struct
+    struct Rental {
+        uint datetime;
         address payable renter;
-        address payable owner;
         uint duration;
     }
 
@@ -43,9 +56,6 @@ contract CarRental is IRental {
         _;
     }
 
-    //todo: Ensure the rental duration not exceed the set limit
- 
-
 
     // public constructor
     constructor() public  {
@@ -57,15 +67,15 @@ contract CarRental is IRental {
 
    // add new car 
    // uid should pass in from external instead of generate in the SC. Perhaps, this should use Oraclelisation
-function addNewCar(string calldata _carName, uint _deposit, uint _uid) external returns(bool){
-    Cars[_uid] = Car({
+function addNewCar(string calldata _carName, uint _price, uint _uid, uint _year) external returns(bool){
+     
+     Cars[_uid] = Car({
      name: _carName, 
-     deposit: _deposit, 
+     price: _price, 
      uid: _uid,
      state: State.ForRent, 
-     owner: msg.sender, 
-     renter: address(0),
-     duration: Duration
+     year: _year
+    
     
     });
     
@@ -73,14 +83,18 @@ function addNewCar(string calldata _carName, uint _deposit, uint _uid) external 
     return true;
 }
 
+
 function fetchCar(uint _uid) external view 
-     returns (string memory carName, uint deposit, uint state) 
+     returns (uint Uid, string memory carName, uint price, uint state, uint year) 
    { 
     carName = Cars[_uid].name; 
-    deposit  = Cars[_uid].deposit; 
+    Uid =  Cars[_uid].uid; 
+    price  = Cars[_uid].price; 
     state = uint(Cars[_uid].state); 
+    year  = Cars[_uid].year; 
+
   
-     return (carName, deposit, state); 
+     return (Uid, carName, price, state, year); 
   } 
 
 }
