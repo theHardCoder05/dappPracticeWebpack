@@ -12,6 +12,7 @@ contract CarRental is ICar, IRental {
     // Enum status for car 
     enum RentalState {Vacant, Occuppied }
 
+    uint Total;
     // rental_id 
     uint rentalId;
     // Constant values - 2 weeks
@@ -107,6 +108,7 @@ function fetchCar(uint _uid) external view
 
 // Rent car function with uid and renter's address
 // datetime pass-in from external not to use timestamp in Solidity to avoid timestamp hacks.
+// Modifier, who can pay the deposit?
 function rentCar(uint _uid, address payable  _renter, uint _datetime) external payable returns(bool) {
     uint256 amount = msg.value;
     Rentals[_renter] = Rental({
@@ -127,24 +129,18 @@ function rentCar(uint _uid, address payable  _renter, uint _datetime) external p
 
 function fetchRental(address payable _renter) external view  returns(uint rid, uint datetime, uint duration, uint receivedAmount,address payable renter, uint cid) {
 
-rid = Rentals[_renter].id; 
-datetime = Rentals[_renter].datetime;
-duration = Rentals[_renter].duration;
-receivedAmount = Rentals[_renter].receivedAmount;
-renter = Rentals[_renter].renter;
-cid = Rentals[_renter].cid;  
+        rid = Rentals[_renter].id; 
+        datetime = Rentals[_renter].datetime;
+        duration = Rentals[_renter].duration;
+        receivedAmount = Rentals[_renter].receivedAmount;
+        renter = Rentals[_renter].renter;
+        cid = Rentals[_renter].cid;  
 
 
 return (rid, datetime, duration, receivedAmount, renter,cid); 
-
 }
 
-
-
-
-
 }
-
 
 
 

@@ -21,6 +21,7 @@ contract("Car Rental", function (accounts) {
   
     beforeEach(async () => {
       instance = await CarRental.new();
+      console.log('SC Address -' + instance.address);
     });
 
 
@@ -250,8 +251,12 @@ describe("Rental struct", () => {
       // Rental Unit test cases
       describe("Use cases - Rental", () => {
         it("should rent a car with uid, render(address), datetime,", async () => {
-          await instance.rentCar(uid, bob, datetime, { from: alice, value:web3.utils.toWei('0.05', "ether") });
+          await instance.rentCar(uid, bob, datetime, { from: bob, value: web3.utils.toWei('4', "ether") });
+          //let txHash = await web3.eth.sendTransaction({from: bob, to:instance.address, value:web3.utils.toWei('1', "ether") });
+          // await instance.payDeposit({ from: bob, value: web3.utils.toWei(web3.utils.toBN('1'), "ether") });
           const result = await instance.fetchRental.call(bob);
+          let SCBalance = await web3.eth.getBalance(instance.address)
+          console.log("balance:" +  SCBalance);
           // console.log(result);
           assert.equal(
             result[0],
@@ -270,7 +275,7 @@ describe("Rental struct", () => {
           );
           assert.equal(
             result[3],
-            web3.utils.toWei('0.05', "ether"),
+            web3.utils.toWei('4', "ether"),
             "the receivedAmount of the last added Rental does not match the expected value",
           );
           assert.equal(
@@ -283,15 +288,21 @@ describe("Rental struct", () => {
             uid,
             "the car id  of the last added Rental does not match the expected value",
           );
-            console.log(instance.address);
-          assert.equal(
-            web3.eth.getBalance(instance.address),
-            web3.utils.toWei('0.05', "ether"),
-            "the car id  of the last added Rental does not match the expected value",
-          );
+        
         });
     
       });
     
-
+    //   describe("adopted over allow quantity", function () {
+    //     it("test get balance", async function () {
+       
+    //         let balance = await web3.eth.getBalance(alice)
+    //         let balance1 = await web3.eth.getBalance(bob)
+    //         let SCBalance = await web3.eth.getBalance(instance.address)
+    //         console.log("balance:" +  balance);
+    //         console.log("balance:" +  balance1);
+    //         console.log("balance:" +  SCBalance);
+    //         console.log(web3.utils.toWei(web3.utils.toBN(SCBalance), "ether").toString());
+    //     });
+    // });
   });
