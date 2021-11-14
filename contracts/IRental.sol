@@ -11,5 +11,5 @@ interface IRental {
     // Withdraw deposit back to renter
     function withdraw(address payable renter) external returns (bool);
         // fetch Rental 
-    function fetchRental(address payable _renter) external view returns (uint,uint,uint,uint,address payable,uint);
+    function fetchRental(address payable _renter) external view returns (uint,uint,uint,uint,address payable,uint,uint);
 }

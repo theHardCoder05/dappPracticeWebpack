@@ -195,14 +195,14 @@ describe("Rental struct", () => {
         "`duration` should be of type `uint`"
       );
     }); 
-    it("should have a `receivedAmount`", () => {
+    it("should have a `deposit`", () => {
       assert(
-        isDefined(subjectStruct)("receivedAmount"), 
-        "Struct Rental should have a `receivedAmount` member"
+        isDefined(subjectStruct)("deposit"), 
+        "Struct Rental should have a `deposit` member"
       );
       assert(
-        isType(subjectStruct)("receivedAmount")("uint"), 
-        "`receivedAmount` should be of type `uint`"
+        isType(subjectStruct)("deposit")("uint"), 
+        "`deposit` should be of type `uint`"
       );
     });
 });
@@ -210,7 +210,7 @@ describe("Rental struct", () => {
 
 
     // Unit test cases
-    describe("Use cases - Car", () => {
+    describe("Use case - Car", () => {
         it("should add a new Car with CarName, Price, Uid, Year", async () => {
           await instance.addNewCar(carName, price, uid, year, { from: alice });
     
@@ -249,8 +249,8 @@ describe("Rental struct", () => {
 
 
 
-      // Rental Unit test cases
-      describe("Use cases - Rental", () => {
+      //  Test Renting car
+      describe("Use case - Rental", () => {
         it("should rent a car with uid, render(address), datetime,", async () => {
           await instance.rentCar(uid, bob, datetime, { from: bob, value: deposit });
           //let txHash = await web3.eth.sendTransaction({from: bob, to:instance.address, value:web3.utils.toWei('1', "ether") });
@@ -302,4 +302,27 @@ describe("Rental struct", () => {
       });
     
 
+      // Test Withdraw deposit
+      describe("Use case - Withdraw deposit" , () => {
+        it("should rent and refund without error", async () => {
+          await instance.rentCar(uid, bob, datetime, { from: bob, value: deposit });
+          let SCBalanceBefore = await web3.eth.getBalance(instance.address)
+          console.log(SCBalanceBefore);
+          const withdrawResult = await instance.withdraw.call(bob);
+          const Rentalresult = await instance.fetchRental.call(bob);
+          console.log(Rentalresult[3].toString());
+          console.log(Rentalresult[4].toString());
+          // assert.equal(
+          //   Rentalresult[3],
+          //   0,
+          //   "the deposit of withdraw Rental does not match the expected value",
+          // );
+          assert.equal(
+            Rentalresult[6],
+            CarRental.RentalState.Vacant,
+            "the state of withdraw Rental does not match the expected value",
+          );
+
+        });
+      })
   });

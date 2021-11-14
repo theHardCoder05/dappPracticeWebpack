@@ -33,6 +33,8 @@ contract CarRental is ICar, IRental {
     // event log for Rental
     event LogRentCar(uint rentalId);
 
+    // event log for withdraw
+    event LogWithdraw(address render, uint deposit);
     // Car Struct
     struct Car {
         uint uid;
@@ -49,8 +51,9 @@ contract CarRental is ICar, IRental {
         uint datetime;
         address payable renter;
         uint duration;
-        uint receivedAmount;
+        uint deposit;
         uint cid;
+        RentalState state;
     }
 
     // Only Owner
@@ -64,6 +67,13 @@ contract CarRental is ICar, IRental {
         _;
     }
 
+    // Modifier to check the rental is refundable
+    modifier IsRefundable(address renter) {
+    
+    require((Rentals[renter].renter != address(0)) && (Rentals[renter].state == RentalState.Occuppied), "Not refundable with error");
+      _;
+
+   }
 
     // public constructor
     constructor() public  {
@@ -116,9 +126,10 @@ function rentCar(uint _uid, address payable  _renter, uint _datetime) external p
     id: rentalId,
     datetime: _datetime,
     duration: Duration,
-    receivedAmount:amount,
+    deposit:amount,
     renter: _renter,
-    cid:_uid
+    cid:_uid,
+    state: RentalState.Occuppied
     });
 
     rentalId = rentalId + 1;
@@ -129,22 +140,32 @@ function rentCar(uint _uid, address payable  _renter, uint _datetime) external p
 }
 
 // Withdraw back the deposit to renter
-function withdraw(address payable renter) external isOwner returns (bool){
+// Use to send() to get boolean status
+
+function withdraw(address payable renter) external isOwner IsRefundable(renter) returns (bool){
+
+    uint withdrawAmount = Rentals[renter].deposit;
+    Rentals[renter].deposit = 0;
+    bool result = renter.send(withdrawAmount);
+    require(result, "Withdraw failed!");
+    Rentals[renter].state = RentalState.Vacant;
+    emit LogWithdraw(renter, withdrawAmount);
     return true;
 }
 
 
-function fetchRental(address payable _renter) external view  returns(uint rid, uint datetime, uint duration, uint receivedAmount,address payable renter, uint cid) {
+function fetchRental(address payable _renter) external view  returns(uint rid, uint datetime, uint duration, uint deposit,address payable renter, uint cid, uint state) {
 
         rid = Rentals[_renter].id; 
         datetime = Rentals[_renter].datetime;
         duration = Rentals[_renter].duration;
-        receivedAmount = Rentals[_renter].receivedAmount;
+        deposit = Rentals[_renter].deposit;
         renter = Rentals[_renter].renter;
         cid = Rentals[_renter].cid;  
+        state = uint(Rentals[_renter].state);  
 
 
-return (rid, datetime, duration, receivedAmount, renter,cid); 
+return (rid, datetime, duration, deposit, renter,cid,state); 
 }
 
 }
