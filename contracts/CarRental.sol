@@ -7,7 +7,7 @@ contract CarRental is ICar, IRental {
     address public owner;
 
     // Enum status for car 
-    enum State {ForRent, UnderMaintenance }
+    enum State {ForRent, Rented, UnderMaintenance }
 
     // Enum status for car 
     enum RentalState {Vacant, Occuppied }
@@ -54,13 +54,13 @@ contract CarRental is ICar, IRental {
     }
 
     // Only Owner
-    modifier isOwner (address _address) { 
-        require (msg.sender == _address); 
+    modifier isOwner { 
+        require (msg.sender == owner); 
         _;
     }
     // modifier to check paidEnough
-      modifier paidEnough(uint _fee) { 
-        require(msg.value >= _fee); 
+      modifier paidEnough(uint _deposit) { 
+        require(msg.value >= _deposit, "Insufficient fund"); 
         _;
     }
 
@@ -109,7 +109,8 @@ function fetchCar(uint _uid) external view
 // Rent car function with uid and renter's address
 // datetime pass-in from external not to use timestamp in Solidity to avoid timestamp hacks.
 // Modifier, who can pay the deposit?
-function rentCar(uint _uid, address payable  _renter, uint _datetime) external payable returns(bool) {
+// Is msg.value sufficient?
+function rentCar(uint _uid, address payable  _renter, uint _datetime) external payable paidEnough(Cars[_uid].price)  returns(bool) {
     uint256 amount = msg.value;
     Rentals[_renter] = Rental({
     id: rentalId,
@@ -121,11 +122,17 @@ function rentCar(uint _uid, address payable  _renter, uint _datetime) external p
     });
 
     rentalId = rentalId + 1;
-
+    Cars[_uid].state = State.Rented;
     emit LogRentCar(rentalId);
     return true;
     
 }
+
+// Withdraw back the deposit to renter
+function withdraw(address payable renter) external isOwner returns (bool){
+    return true;
+}
+
 
 function fetchRental(address payable _renter) external view  returns(uint rid, uint datetime, uint duration, uint receivedAmount,address payable renter, uint cid) {
 

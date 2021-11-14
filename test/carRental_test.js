@@ -7,7 +7,8 @@ contract("Car Rental", function (accounts) {
     const [_owner, alice, bob] = accounts;
     const emptyAddress = "0x0000000000000000000000000000000000000000";
     // Car params
-    const price = 1000;
+    const price = "1000";
+    const deposit = "1000";
     const carName = "BMW";
     const uid = 001;
     const duration = 14;
@@ -21,7 +22,7 @@ contract("Car Rental", function (accounts) {
   
     beforeEach(async () => {
       instance = await CarRental.new();
-      console.log('SC Address -' + instance.address);
+     
     });
 
 
@@ -251,13 +252,20 @@ describe("Rental struct", () => {
       // Rental Unit test cases
       describe("Use cases - Rental", () => {
         it("should rent a car with uid, render(address), datetime,", async () => {
-          await instance.rentCar(uid, bob, datetime, { from: bob, value: web3.utils.toWei('4', "ether") });
+          await instance.rentCar(uid, bob, datetime, { from: bob, value: deposit });
           //let txHash = await web3.eth.sendTransaction({from: bob, to:instance.address, value:web3.utils.toWei('1', "ether") });
           // await instance.payDeposit({ from: bob, value: web3.utils.toWei(web3.utils.toBN('1'), "ether") });
           const result = await instance.fetchRental.call(bob);
           let SCBalance = await web3.eth.getBalance(instance.address)
-          console.log("balance:" +  SCBalance);
-          // console.log(result);
+          console.log("Current Balance in escrow:" +  SCBalance);
+          const carResult = await instance.fetchCar.call(001);
+          assert.equal(
+            carResult[3],
+            CarRental.State.Rented,
+            "the status of the car does not match the expected value",
+          );
+
+
           assert.equal(
             result[0],
             0,
@@ -275,7 +283,7 @@ describe("Rental struct", () => {
           );
           assert.equal(
             result[3],
-            web3.utils.toWei('4', "ether"),
+            deposit,
             "the receivedAmount of the last added Rental does not match the expected value",
           );
           assert.equal(
@@ -293,16 +301,5 @@ describe("Rental struct", () => {
     
       });
     
-    //   describe("adopted over allow quantity", function () {
-    //     it("test get balance", async function () {
-       
-    //         let balance = await web3.eth.getBalance(alice)
-    //         let balance1 = await web3.eth.getBalance(bob)
-    //         let SCBalance = await web3.eth.getBalance(instance.address)
-    //         console.log("balance:" +  balance);
-    //         console.log("balance:" +  balance1);
-    //         console.log("balance:" +  SCBalance);
-    //         console.log(web3.utils.toWei(web3.utils.toBN(SCBalance), "ether").toString());
-    //     });
-    // });
+
   });
