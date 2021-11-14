@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.5.16 <0.9.0;
-// import "../node_modules/@openzeppelin/contracts/utils/math/SafeMath.sol";
 import './ICar.sol';
 import './IRental.sol';
 contract CarRental is ICar, IRental {
@@ -108,7 +107,7 @@ function fetchCar(uint _uid) external view
 
 // Rent car function with uid and renter's address
 // datetime pass-in from external not to use timestamp in Solidity to avoid timestamp hacks.
-function rentCar(uint _uid, address payable _renter, uint _datetime) external payable returns(bool) {
+function rentCar(uint _uid, address payable  _renter, uint _datetime) external payable returns(bool) {
     uint256 amount = msg.value;
     Rentals[_renter] = Rental({
     id: rentalId,
@@ -125,6 +124,24 @@ function rentCar(uint _uid, address payable _renter, uint _datetime) external pa
     return true;
     
 }
+
+function fetchRental(address payable _renter) external view  returns(uint rid, uint datetime, uint duration, uint receivedAmount,address payable renter, uint cid) {
+
+rid = Rentals[_renter].id; 
+datetime = Rentals[_renter].datetime;
+duration = Rentals[_renter].duration;
+receivedAmount = Rentals[_renter].receivedAmount;
+renter = Rentals[_renter].renter;
+cid = Rentals[_renter].cid;  
+
+
+return (rid, datetime, duration, receivedAmount, renter,cid); 
+
+}
+
+
+
+
 
 }
 

@@ -14,7 +14,8 @@ contract("Car Rental", function (accounts) {
     const year = 1807;
 
     // Rental params
-
+    // UTC timestamp format
+    const datetime =  1636869118;
 
     let instance;
   
@@ -207,7 +208,7 @@ describe("Rental struct", () => {
 
 
     // Unit test cases
-    describe("Use cases", () => {
+    describe("Use cases - Car", () => {
         it("should add a new Car with CarName, Price, Uid, Year", async () => {
           await instance.addNewCar(carName, price, uid, year, { from: alice });
     
@@ -243,4 +244,54 @@ describe("Rental struct", () => {
     
       });
     
+
+
+
+      // Rental Unit test cases
+      describe("Use cases - Rental", () => {
+        it("should rent a car with uid, render(address), datetime,", async () => {
+          await instance.rentCar(uid, bob, datetime, { from: alice, value:web3.utils.toWei('0.05', "ether") });
+          const result = await instance.fetchRental.call(bob);
+          // console.log(result);
+          assert.equal(
+            result[0],
+            0,
+            "the rid of the last added Rental does not match the expected value",
+          );
+          assert.equal(
+            result[1],
+            datetime,
+            "the datetime of the last added Rental does not match the expected value",
+          );
+          assert.equal(
+            result[2],
+            14,
+            "the duration of the last added Rental does not match the expected value",
+          );
+          assert.equal(
+            result[3],
+            web3.utils.toWei('0.05', "ether"),
+            "the receivedAmount of the last added Rental does not match the expected value",
+          );
+          assert.equal(
+            result[4],
+            bob,
+            "the address(bob) of the last added Rental does not match the expected value",
+          );
+          assert.equal(
+            result[5],
+            uid,
+            "the car id  of the last added Rental does not match the expected value",
+          );
+            console.log(instance.address);
+          assert.equal(
+            web3.eth.getBalance(instance.address),
+            web3.utils.toWei('0.05', "ether"),
+            "the car id  of the last added Rental does not match the expected value",
+          );
+        });
+    
+      });
+    
+
   });

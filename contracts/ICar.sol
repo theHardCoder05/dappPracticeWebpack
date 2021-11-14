@@ -8,7 +8,7 @@ interface ICar {
     function addNewCar(string calldata _carName, uint _price, uint _uid, uint year) external returns(bool);
 
     // // rent a car with ether
-    // function rentCar(uint _uid, address renter)  external returns(bool);
+    //function rentCar(uint _uid, address renter)  external returns(bool);
 
     // fetch car in stock
     function fetchCar(uint _uid) external view returns (uint, string memory , uint, uint, uint);
