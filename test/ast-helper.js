@@ -22,6 +22,21 @@ const cars = (ca) => {
     }));
 };
 
+const rentals = (ca) => {
+  const item = contractDefn(ca).nodes.find((n) => n.name === "Rental");
+  if (!item) return null;
+
+  return item
+    .members
+    .map((t) => ({
+      name: t.name,
+      nodeType: t.nodeType,
+      stateVariable: t.stateVariable,
+      type: t.typeName.name,
+      mutability: t.typeName.stateMutability,
+    }));
+};
+
 const isDefined = members => variableName => {
   return members 
     ? members.find((item) => item.name === variableName) 
@@ -41,6 +56,7 @@ const isType = members => variableName => type => {
 };
 
 module.exports = {
+  rentals,
   cars,
   isDefined,
   isPayable,

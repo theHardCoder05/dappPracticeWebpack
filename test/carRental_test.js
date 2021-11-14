@@ -1,17 +1,21 @@
 let BN = web3.utils.BN;
 let CarRental = artifacts.require("CarRental");
 let { catchRevert } = require("./exceptionsHelpers.js");
-const { cars: CarStruct, isDefined, isPayable, isType } = require("./ast-helper");
+const { cars: CarStruct, isDefined, isPayable, isType, rentals:RentalStruct } = require("./ast-helper");
 
 contract("Car Rental", function (accounts) {
     const [_owner, alice, bob] = accounts;
     const emptyAddress = "0x0000000000000000000000000000000000000000";
-  
+    // Car params
     const price = 1000;
     const carName = "BMW";
     const uid = 001;
     const duration = 14;
     const year = 1807;
+
+    // Rental params
+
+
     let instance;
   
     beforeEach(async () => {
@@ -147,6 +151,61 @@ contract("Car Rental", function (accounts) {
     });
     
  
+// To check the properties of Rental Struct
+describe("Rental struct", () => {
+  let subjectStruct;
+
+  before(() => {
+    subjectStruct = RentalStruct(CarRental);
+    assert(
+      subjectStruct !== null, 
+      "The contract should define an `Rental Struct`"
+    );
+  });
+  it("should have a `id`", () => {
+      assert(
+        isDefined(subjectStruct)("id"), 
+        "Struct Rental should have a `id` member"
+      );
+      assert(
+        isType(subjectStruct)("id")("uint"), 
+        "`id` should be of type `uint`"
+      );
+    });   
+    it("should have a `datetime`", () => {
+      assert(
+        isDefined(subjectStruct)("datetime"), 
+        "Struct Rental should have a `datetime` member"
+      );
+      assert(
+        isType(subjectStruct)("datetime")("uint"), 
+        "`datetime` should be of type `uint`"
+      );
+    }); 
+    it("should have a `duration`", () => {
+      assert(
+        isDefined(subjectStruct)("duration"), 
+        "Struct Rental should have a `duration` member"
+      );
+      assert(
+        isType(subjectStruct)("duration")("uint"), 
+        "`duration` should be of type `uint`"
+      );
+    }); 
+    it("should have a `receivedAmount`", () => {
+      assert(
+        isDefined(subjectStruct)("receivedAmount"), 
+        "Struct Rental should have a `receivedAmount` member"
+      );
+      assert(
+        isType(subjectStruct)("receivedAmount")("uint"), 
+        "`receivedAmount` should be of type `uint`"
+      );
+    });
+});
+
+
+
     // Unit test cases
     describe("Use cases", () => {
         it("should add a new Car with CarName, Price, Uid, Year", async () => {

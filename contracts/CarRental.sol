@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.5.16 <0.9.0;
-pragma experimental ABIEncoderV2;
+// import "../node_modules/@openzeppelin/contracts/utils/math/SafeMath.sol";
 import './ICar.sol';
 import './IRental.sol';
 contract CarRental is ICar, IRental {
@@ -31,7 +31,7 @@ contract CarRental is ICar, IRental {
     event LogForCreated(address add);
   
     // event log for Rental
-    event LogRentCar(Rental);
+    event LogRentCar(uint rentalId);
 
     // Car Struct
     struct Car {
@@ -50,6 +50,7 @@ contract CarRental is ICar, IRental {
         address payable renter;
         uint duration;
         uint receivedAmount;
+        uint cid;
     }
 
     // Only Owner
@@ -114,10 +115,13 @@ function rentCar(uint _uid, address payable _renter, uint _datetime) external pa
     datetime: _datetime,
     duration: Duration,
     receivedAmount:amount,
-    renter: _renter
+    renter: _renter,
+    cid:_uid
     });
-    
-    emit LogRentCar(Rentals[_renter]);
+
+    rentalId = rentalId + 1;
+
+    emit LogRentCar(rentalId);
     return true;
     
 }
