@@ -250,7 +250,7 @@ describe("Rental struct", () => {
 
 
       //  Test Renting car
-      describe.skip("Use case - Rental", () => {
+      describe("Use case - Rent a car", () => {
         it("should rent a car with uid, render(address), datetime,", async () => {
           await instance.rentCar(uid,  datetime, { from: bob, value: deposit });
           //let txHash = await web3.eth.sendTransaction({from: bob, to:instance.address, value:web3.utils.toWei('1', "ether") });
@@ -306,23 +306,18 @@ describe("Rental struct", () => {
       describe("Use case - Withdraw deposit" , () => {
         it("should rent and refund without error", async () => {
           await instance.rentCar(uid, datetime, { from: bob, value: deposit });
-          let SCBalanceBefore = await web3.eth.getBalance(instance.address)
-          console.log('Current Balance in Smart Contract' + SCBalanceBefore);
           const withdrawResult = await instance.withdraw(bob ,{ from: _owner });
           const Rentalresult = await instance.fetchRental.call(bob);
           let SCBalanceAfter = await web3.eth.getBalance(instance.address)
-          console.log('Current Balance in Smart Contract- After' + SCBalanceAfter);
-          console.log('12' + Rentalresult[4].toString());
-          console.log('qwe' + bob);
           assert.equal(
             SCBalanceAfter,
             0,
             "the deposit after withdraw does not match the expected value",
-          );
+           );
           assert.equal(
             Rentalresult[3],
             0,
-            "the deposit of withdraw Rental does not match the expected value",
+            "the Renter's deposit(Should set to 0) of withdraw Rental does not match the expected value",
           );
           assert.equal(
             Rentalresult[6],
