@@ -19,7 +19,9 @@
     "url": "https://github.com/theHardCoder05/dappPracticeWebpack/issues"
   },
   "homepage": "https://github.com/theHardCoder05/dappPracticeWebpack#readme",
-  "dependencies": {},
+  "dependencies": {
+    "dotenv": "^10.0.0"
+  },
   "devDependencies": {
     "@openzeppelin/contracts": "^4.3.3"
   }

@@ -1,29 +1,37 @@
 import Web3 from "web3";
 import carRentalArtifact from "../../build/contracts/carRental.json";
-
+const SCADdress = 0x0;
 
 const App = {
   web3: null,
   account: null,
-  meta: null,
+  carRetal: null,
 
   start: async function() {
     const { web3 } = this;
 
     try {
+      
       // get contract instance
       const networkId = await web3.eth.net.getId();
       const deployedNetwork = carRentalArtifact.networks[networkId];
-      this.meta = new web3.eth.Contract(
+      this.carRetal = new web3.eth.Contract(
         carRentalArtifact.abi,
         deployedNetwork.address,
       );
+      console.log("This is the deployed Smart Contract address - {0}", deployedNetwork.address);
 
       // get accounts
       const accounts = await web3.eth.getAccounts();
       this.account = accounts[0];
-
-      this.refreshBalance();
+      const sender = document.getElementById("sender");
+      sender.value = this.account;
+      const balance = await web3.eth.getBalance(deployedNetwork.address);
+      console.log(web3.utils.fromWei(balance.toString(), 'ether'));
+      const currentbalance = document.getElementById("currentdeposit");
+      currentbalance.value = balance;
+      //this.refreshBalance();
+      // this.monitorAccount();
     } catch (error) {
       console.error("Could not connect to contract or chain.");
     }
@@ -36,6 +44,7 @@ const App = {
     const balanceElement = document.getElementsByClassName("balance")[0];
     balanceElement.innerHTML = balance;
   },
+
   getAccount: async function() {
     const accounts = await ethereum.enable();
     const account = accounts[0];
@@ -54,6 +63,7 @@ const App = {
     this.refreshBalance();
   },
 
+ 
   setStatus: function(message) {
     const status = document.getElementById("status");
     status.innerHTML = message;
@@ -77,14 +87,18 @@ const App = {
 window.App = App;
 
 window.addEventListener("load", function() {
-  
+ 
+
   if (window.ethereum) {
+    const sender = document.getElementById("sender");
+
     // use MetaMask's provider
     App.web3 = new Web3(window.ethereum);
     window.ethereum.enable(); // get permission to access accounts
     window.ethereum.on('accountsChanged', function (accounts) {
-      getAccount();
-    });
+
+      sender.value = accounts[0];
+     });
  
   } else {
     console.warn(
@@ -95,8 +109,7 @@ window.addEventListener("load", function() {
       new Web3.providers.HttpProvider("http://127.0.0.1:8545"),
     );
   }
-  const sender = document.getElementById("sender");
-  sender.value = App.web3.currentProvider.selectedAddress;
+
 
   App.start();
 });
