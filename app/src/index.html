@@ -14,24 +14,24 @@
   </style>
   <body>
     <div class="container">
-      <h1>Car Rental Dapp</h1>
+      <h1 class="display-1">Car Rental Dapp</h1>
       <div class="row">
         <div class="col-6">
-          <label for="name">Car Model Id:</label>
-          <select class="form-control"aria-label="Car Model Id">
+          <label for="name" >Car Model Id:</label>
+          <select class="form-control"   aria-label="Car Model Id">
             <option selected>Pick a car </option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
           </select>
-          <label for="name">Car Name:</label>
+          <label for="name" class="text-muted">Car Name:</label>
           <input type="text" class="form-control" id="cname" required placeholder="name"  >
           <label for="rentdate">Rent Date:</label>
           <input type="date"  class="form-control" required id="rentdate" name="rentdate">
           <label for="depositamount">Deposit  Amount:</label>
           <input type="number"  class="form-control" id="depositamount" required name="depositamount" placeholder="1 (ether)">
           <button type="button" class="btn btn-secondary">Clear</button>
-          <button type="button" onclick="App.getBalance()" class="btn btn-primary">Book</button>
+          <button type="button" onclick="App.sendCoin()" class="btn btn-primary">Book</button>
         </div>
       
      

@@ -36,11 +36,7 @@ const App = {
     const balanceElement = document.getElementsByClassName("balance")[0];
     balanceElement.innerHTML = balance;
   },
-  getAccount: async function() {
-    const accounts = await ethereum.enable();
-    const account = accounts[0];
-    console.log(account);
-  },
+  
   sendCoin: async function() {
     const amount = parseInt(document.getElementById("amount").value);
     const receiver = document.getElementById("receiver").value;
@@ -48,7 +44,7 @@ const App = {
     this.setStatus("Initiating transaction... (please wait)");
 
     const { sendCoin } = this.meta.methods;
-    await sendCoin().send({ from: this.account });
+    await sendCoin(receiver, amount).send({ from: this.account });
 
     this.setStatus("Transaction complete!");
     this.refreshBalance();
@@ -58,21 +54,15 @@ const App = {
     const status = document.getElementById("status");
     status.innerHTML = message;
   },
-  
 };
 
 window.App = App;
 
 window.addEventListener("load", function() {
-  
   if (window.ethereum) {
     // use MetaMask's provider
     App.web3 = new Web3(window.ethereum);
     window.ethereum.enable(); // get permission to access accounts
-    window.ethereum.on('accountsChanged', function (accounts) {
-      getAccount();
-    });
- 
   } else {
     console.warn(
       "No web3 detected. Falling back to http://127.0.0.1:8545. You should remove this fallback when you deploy live",
