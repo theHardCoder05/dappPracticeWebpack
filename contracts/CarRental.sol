@@ -143,7 +143,7 @@ function rentCar(uint _uid, uint _datetime) external payable paidEnough(Cars[_ui
 // Withdraw back the deposit to renter
 // Use to send() to get boolean status
 
-function withdraw(address payable _renter) external payable  returns (bool){
+function withdraw(address payable _renter) external payable isOwner()  returns (bool){
    
     uint withdrawAmount = Rentals[_renter].deposit;
     Rentals[_renter].deposit = 0;

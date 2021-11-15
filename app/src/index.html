@@ -2,7 +2,7 @@
 <html>
   <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <title>Library Dapp</title>
+    <title>Car Rental Dapp</title>
   </head>
   <style>
     input {
@@ -12,28 +12,56 @@
   </style>
   <body>
     <div class="container">
-      <h1>Library Dapp</h1>
+      <h1>Car Rental Dapp</h1>
       <div class="row">
         <div class="col-6">
-          <label for="name">Book Name:</label>
-          <input type="text" class="form-control" id="name" placeholder="name"  >
-          <label for="name">Id:</label>
-          <input type="text" class="form-control" id="id" placeholder="Id"  >
-          <label for="status" id="status">ForRent</label>
+          <label for="name">Car Name:</label>
+          <input type="text" class="form-control" id="cname" placeholder="name"  >
+          <label for="rentdate">Rent Date:</label>
+          <input type="date"  class="form-control" id="rentdate" name="rentdate">
+          <label for="depositamount">Deposit Amount:</label>
+          <input type="number"  class="form-control" id="depositamount" name="depositamount" placeholder="1 (ether)">
+          <button type="button" class="btn btn-secondary">Clear</button>
+          <button type="button" class="btn btn-primary">Book</button>
         </div>
-       
-     
+      
      
         <div class="col-6">
           <label for="sender">Current Address:</label>
           <input type="text" class="form-control" id="sender" placeholder="address" readonly >
         </div>
       </div>
-  
+      <hr>
+      <div class="container">
+        <h2>List</h2>
+        <div class="row">
+          <div class="col-md-12">
+ 
+        <table class="table">
+          <tr>
+            <th>Car Id</th>
+            <th>Car Name</th>
+            <th>Date</th>
+            <th>Deposit</th>
+            <th>State</th>
+          </tr>
+          <tr>
+            <td>Alfreds Futterkiste</td>
+            <td>Maria Anders</td>
+            <td>Germany</td>
+            <td>Germany</td>
+            <td>Germany</td>
+          </tr>
+        
+        </table>
+      </div>
+      </div>
+    </div>
+      </div>
       <!-- <button onclick="App.sendCoin()">Send MetaCoin</button> -->
       <!-- <button type="button" onclick="App.sendCoin()" class="btn btn-primary">Send MetaCoin</button>
       <p id="status"></p> -->
-    
+      
     </div>
    
  
