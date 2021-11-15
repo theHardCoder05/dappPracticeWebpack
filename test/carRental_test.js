@@ -250,9 +250,9 @@ describe("Rental struct", () => {
 
 
       //  Test Renting car
-      describe("Use case - Rental", () => {
+      describe.skip("Use case - Rental", () => {
         it("should rent a car with uid, render(address), datetime,", async () => {
-          await instance.rentCar(uid, bob, datetime, { from: bob, value: deposit });
+          await instance.rentCar(uid,  datetime, { from: bob, value: deposit });
           //let txHash = await web3.eth.sendTransaction({from: bob, to:instance.address, value:web3.utils.toWei('1', "ether") });
           // await instance.payDeposit({ from: bob, value: web3.utils.toWei(web3.utils.toBN('1'), "ether") });
           const result = await instance.fetchRental.call(bob);
@@ -305,18 +305,25 @@ describe("Rental struct", () => {
       // Test Withdraw deposit
       describe("Use case - Withdraw deposit" , () => {
         it("should rent and refund without error", async () => {
-          await instance.rentCar(uid, bob, datetime, { from: bob, value: deposit });
+          await instance.rentCar(uid, datetime, { from: bob, value: deposit });
           let SCBalanceBefore = await web3.eth.getBalance(instance.address)
-          console.log(SCBalanceBefore);
-          const withdrawResult = await instance.withdraw.call(bob);
+          console.log('Current Balance in Smart Contract' + SCBalanceBefore);
+          const withdrawResult = await instance.withdraw(bob ,{ from: _owner });
           const Rentalresult = await instance.fetchRental.call(bob);
-          console.log(Rentalresult[3].toString());
-          console.log(Rentalresult[4].toString());
-          // assert.equal(
-          //   Rentalresult[3],
-          //   0,
-          //   "the deposit of withdraw Rental does not match the expected value",
-          // );
+          let SCBalanceAfter = await web3.eth.getBalance(instance.address)
+          console.log('Current Balance in Smart Contract- After' + SCBalanceAfter);
+          console.log('12' + Rentalresult[4].toString());
+          console.log('qwe' + bob);
+          assert.equal(
+            SCBalanceAfter,
+            0,
+            "the deposit after withdraw does not match the expected value",
+          );
+          assert.equal(
+            Rentalresult[3],
+            0,
+            "the deposit of withdraw Rental does not match the expected value",
+          );
           assert.equal(
             Rentalresult[6],
             CarRental.RentalState.Vacant,
