@@ -58,8 +58,21 @@ const App = {
     const status = document.getElementById("status");
     status.innerHTML = message;
   },
+
+  // Rent Car function 
+  // Convert date to Epoch 
+  rentCar: async () => {
+    const carId = document.getElementById("carId").value;
+    const carName = document.getElementById("cname").value;
+    const rentDate = Math.round(new Date(document.getElementById("rentdate").value).getTime() / 1000.0);
+    const deposit = document.getElementById("depositamount").value;
+    alert(carId + carName + rentDate + deposit);
+  },
   
+
 };
+
+
 
 window.App = App;
 

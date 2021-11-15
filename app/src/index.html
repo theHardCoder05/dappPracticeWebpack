@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <title>Car Rental Dapp</title>
     <script src="bundle.js"></script>
- 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
   </head>
   <style>
     input {
@@ -18,7 +18,7 @@
       <div class="row">
         <div class="col-6">
           <label for="name" >Car Model Id:</label>
-          <select class="form-control"   aria-label="Car Model Id">
+          <select class="form-control"  id="carId"  aria-label="Car Model Id">
             <option selected>Pick a car </option>
             <option value="1">1</option>
             <option value="2">2</option>
@@ -31,7 +31,7 @@
           <label for="depositamount">Deposit  Amount:</label>
           <input type="number"  class="form-control" id="depositamount" required name="depositamount" placeholder="1 (ether)">
           <button type="button" class="btn btn-secondary">Clear</button>
-          <button type="button" onclick="App.sendCoin()" class="btn btn-primary">Book</button>
+          <button type="button" onclick="App.rentCar()" class="btn btn-primary">Book</button>
         </div>
       
      
