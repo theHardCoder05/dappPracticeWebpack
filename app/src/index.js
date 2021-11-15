@@ -1,5 +1,6 @@
 import Web3 from "web3";
-import metaCoinArtifact from "../../build/contracts/MetaCoin.json";
+import carRentalArtifact from "../../build/contracts/carRental.json";
+
 
 const App = {
   web3: null,
@@ -12,9 +13,9 @@ const App = {
     try {
       // get contract instance
       const networkId = await web3.eth.net.getId();
-      const deployedNetwork = metaCoinArtifact.networks[networkId];
+      const deployedNetwork = carRentalArtifact.networks[networkId];
       this.meta = new web3.eth.Contract(
-        metaCoinArtifact.abi,
+        carRentalArtifact.abi,
         deployedNetwork.address,
       );
 
@@ -35,7 +36,9 @@ const App = {
     const balanceElement = document.getElementsByClassName("balance")[0];
     balanceElement.innerHTML = balance;
   },
-
+  getBalance: async function() {
+ alert('hello');
+  },
   sendCoin: async function() {
     const amount = parseInt(document.getElementById("amount").value);
     const receiver = document.getElementById("receiver").value;
@@ -76,3 +79,7 @@ window.addEventListener("load", function() {
 
   App.start();
 });
+
+
+
+
