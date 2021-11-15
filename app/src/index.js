@@ -1,6 +1,5 @@
 import Web3 from "web3";
 import carRentalArtifact from "../../build/contracts/carRental.json";
-const SCADdress = 0x0;
 
 const App = {
   web3: null,
