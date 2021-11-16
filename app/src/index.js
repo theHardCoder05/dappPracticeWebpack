@@ -79,7 +79,20 @@ const App = {
     this.setStatus("Transaction complete!");
     this.refreshBalance();
   },
+  hashFunction: async function(message) {
+    // encode as UTF-8
+    const msgBuffer = new TextEncoder().encode(message);                    
 
+    // hash the message
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+
+    // convert ArrayBuffer to Array
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+
+    // convert bytes to hex string                  
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    return hashHex;
+},
   getEtherPrice: async () => {
     const price = await fetch('https://api.coinbase.com/v2/prices/ETH-USD/buy');
     const result = await price.json();
@@ -95,13 +108,16 @@ const App = {
 
   // Rent Car function 
   // Convert date to Epoch 
+  // Masked and hashed the driving license id for security purpose
   rentCar: async () => {
     const carId = document.getElementById("carId").value.trim();
 
     const driverName = document.getElementById("dname").value.trim();
     const rentDate = Math.round(new Date(document.getElementById("rentdate").value).getTime() / 1000.0);
     const deposit = document.getElementById("depositamount").value;
-  
+    const drivername = document.getElementById("dname").value;
+    const drivinglicenseid = document.getElementById("dlilcenseid").value;
+    console.log(App.hashFunction(drivinglicenseid));
     if (carId == "") {
       alert('Please pick a car');
     } 
@@ -111,6 +127,9 @@ const App = {
     if (deposit == "") {
       alert('Deposit cannot be blank');
     } 
+    if (drivinglicenseid == "") {
+      alert('Driving License Id cannot be blank');
+    } 
 
     // If everything is okay then rent!!!
   },
@@ -119,7 +138,8 @@ const App = {
   reset: async () => {
     document.getElementById("carId").value = "";
     document.getElementById("dname").value = "";
-    document.getElementById("depositamount").value = "";
+    document.getElementById("dlilcenseid").value = "";
+   
   }
 };
 

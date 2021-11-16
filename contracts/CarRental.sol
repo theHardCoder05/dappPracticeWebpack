@@ -146,7 +146,7 @@ function rentCar(uint _uid,string calldata _drivername,string calldata _drivingl
 
 // Withdraw back the deposit to renter
 // Use to send() to get boolean status
-
+// Use Require to ensure the withdraw is succesfully done
 function withdraw(address payable _renter) external payable isOwner()  returns (bool){
    
     uint withdrawAmount = Rentals[_renter].deposit;
