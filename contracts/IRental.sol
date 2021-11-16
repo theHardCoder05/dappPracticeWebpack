@@ -7,7 +7,7 @@ interface IRental {
 
     // Rent Car function with uid and renter's address
     // Payable function to pay deposit
-    function rentCar(uint _uid,  uint _datetime) external payable returns(bool);
+    function rentCar(uint _uid, string calldata drivername, string calldata drivinglicenseid, uint _datetime) external payable returns(bool);
     // Withdraw deposit back to renter
     function withdraw(address payable renter) external payable returns (bool);
         // fetch Rental 

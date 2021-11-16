@@ -10,6 +10,8 @@ contract("Car Rental", function (accounts) {
     const price = "1000";
     const deposit = "1000";
     const carName = "BMW";
+    const drivername = "Bob";
+    const drivinglicenseid = "A-98756-009";
     const uid = 001;
     const duration = 14;
     const year = 1807;
@@ -204,6 +206,31 @@ describe("Rental struct", () => {
         isType(subjectStruct)("deposit")("uint"), 
         "`deposit` should be of type `uint`"
       );
+      
+    });
+
+    it("should have a `drivername`", () => {
+      assert(
+        isDefined(subjectStruct)("drivername"), 
+        "Struct Rental should have a `drivername` member"
+      );
+      assert(
+        isType(subjectStruct)("drivername")("string"), 
+        "`drivername` should be of type `string`"
+      );
+      
+    });
+
+    it("should have a `drivinglicenseid`", () => {
+      assert(
+        isDefined(subjectStruct)("drivinglicenseid"), 
+        "Struct Rental should have a `drivinglicenseid` member"
+      );
+      assert(
+        isType(subjectStruct)("drivinglicenseid")("string"), 
+        "`drivinglicenseid` should be of type `string`"
+      );
+      
     });
 });
 
@@ -252,7 +279,7 @@ describe("Rental struct", () => {
       //  Test Renting car
       describe("Use case - Rent a car", () => {
         it("should rent a car with uid, render(address), datetime,", async () => {
-          await instance.rentCar(uid,  datetime, { from: bob, value: deposit });
+          await instance.rentCar(uid, drivername, drivinglicenseid,  datetime, { from: bob, value: deposit });
           //let txHash = await web3.eth.sendTransaction({from: bob, to:instance.address, value:web3.utils.toWei('1', "ether") });
           // await instance.payDeposit({ from: bob, value: web3.utils.toWei(web3.utils.toBN('1'), "ether") });
           const result = await instance.fetchRental.call(bob);
@@ -305,7 +332,7 @@ describe("Rental struct", () => {
       // Test Withdraw deposit
       describe("Use case - Withdraw deposit" , () => {
         it("should rent and refund without error", async () => {
-          await instance.rentCar(uid, datetime, { from: bob, value: deposit });
+          await instance.rentCar(uid, drivername, drivinglicenseid,   datetime, { from: bob, value: deposit });
           const withdrawResult = await instance.withdraw(bob ,{ from: _owner });
           const Rentalresult = await instance.fetchRental.call(bob);
           let SCBalanceAfter = await web3.eth.getBalance(instance.address)

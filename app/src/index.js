@@ -32,6 +32,23 @@ const App = {
       //this.refreshBalance();
       // this.monitorAccount();
       this.getEtherPrice();
+
+        var intervalID = setInterval(getPrice, 5000);
+        
+         
+        const depositHelp = document.getElementById("pricerate");
+        async function getPrice()
+        {
+          const price = await fetch('https://api.coinbase.com/v2/prices/ETH-USD/buy');
+          const result = await price.json();
+          console.log(result.data['amount']);
+          
+          depositHelp.innerHTML = "The current rate is : " + result.data['amount'];
+      
+        }
+
+
+
     } catch (error) {
       console.error("Could not connect to contract or chain.");
     }
