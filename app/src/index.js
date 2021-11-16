@@ -47,9 +47,8 @@ const App = {
 
           const currentbalance = document.getElementById("currentdeposit");
           currentbalance.value = balance;
+
         }
-
-
 
     } catch (error) {
       console.error("Could not connect to contract or chain.");
@@ -142,8 +141,9 @@ const App = {
     console.log( "asdasd" + App.carSC);
     console.log(App.account);
     console.log(deposit);
+    const weiValue = Web3.utils.toWei(deposit, 'ether');
      const { rentCar } = App.carSC.methods;
-     await rentCar(carId, drivername, drivinglicenseid, rentDate).send({ from: App.account, to: App.carSC._address, value: deposit });
+     await rentCar(carId, drivername, drivinglicenseid, rentDate).send({ from: App.account, to: App.carSC._address, value: weiValue });
    
 
   },
