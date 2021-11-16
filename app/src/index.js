@@ -55,12 +55,14 @@ const App = {
     }
   },
 
-  refreshBalance: async function() {
-    const { getBalance } = this.meta.methods;
-    const balance = await getBalance(this.account).call();
 
-    const balanceElement = document.getElementsByClassName("balance")[0];
-    balanceElement.innerHTML = balance;
+
+  // Get all rentals from Smart Contract
+  getAllRentals: async (address) => {
+    const { Rentals } = App.carSC.methods;
+    const rentals = await Rentals(address).call();
+    console.log(rentals);
+    return rentals;
   },
 
   getAccount: async function() {
@@ -68,18 +70,7 @@ const App = {
     const account = accounts[0];
     console.log(account);
   },
-  sendCoin: async function() {
-    const amount = parseInt(document.getElementById("amount").value);
-    const receiver = document.getElementById("receiver").value;
 
-    this.setStatus("Initiating transaction... (please wait)");
-
-    const { sendCoin } = this.meta.methods;
-    await sendCoin().send({ from: this.account });
-
-    this.setStatus("Transaction complete!");
-    this.refreshBalance();
-  },
   hashFunction: async function(message) {
     // encode as UTF-8
     const msgBuffer = new TextEncoder().encode(message);                    
@@ -92,14 +83,14 @@ const App = {
 
     // convert bytes to hex string                  
     const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    return hashHex;
+    return "0x" + hashHex;
 },
   getEtherPrice: async () => {
     const price = await fetch('https://api.coinbase.com/v2/prices/ETH-USD/buy');
     const result = await price.json();
     console.log(result.data['amount']);
     const depositHelp = document.getElementById("pricerate");
-    depositHelp.outerText = "The current rate is : " + result.data['amount'];
+    depositHelp.outerText = "The current rate(USD) is : $" + result.data['amount'];
   },
 
   setStatus: function(message) {
@@ -138,12 +129,14 @@ const App = {
     } 
 
     // If everything is okay then rent!!!
-    console.log( "asdasd" + App.carSC);
+
     console.log(App.account);
     console.log(deposit);
     const weiValue = Web3.utils.toWei(deposit, 'ether');
-     const { rentCar } = App.carSC.methods;
-     await rentCar(carId, drivername, drivinglicenseid, rentDate).send({ from: App.account, to: App.carSC._address, value: weiValue });
+    const { rentCar } = App.carSC.methods;
+    const bytes32DrivingLicenseId = await App.hashFunction(drivinglicenseid);
+    console.log("aaaa" + bytes32DrivingLicenseId);
+    await rentCar(carId, drivername, bytes32DrivingLicenseId, rentDate).send({ from: App.account, to: App.carSC._address, value: weiValue });
    
 
   },

@@ -11,7 +11,8 @@ contract("Car Rental", function (accounts) {
     const deposit = "1000";
     const carName = "BMW";
     const drivername = "Bob";
-    const drivinglicenseid = "A-98756-009";
+    // A-001
+    const drivinglicenseid = "0x8C4565B43A25934E43A234404E197049FB30355FE5203D941B1297351CB5066C";
     const uid = 001;
     const duration = 14;
     const year = 1807;
@@ -227,8 +228,8 @@ describe("Rental struct", () => {
         "Struct Rental should have a `drivinglicenseid` member"
       );
       assert(
-        isType(subjectStruct)("drivinglicenseid")("string"), 
-        "`drivinglicenseid` should be of type `string`"
+        isType(subjectStruct)("drivinglicenseid")("bytes32"), 
+        "`drivinglicenseid` should be of type `bytes32`"
       );
       
     });

@@ -51,7 +51,7 @@ contract CarRental is ICar, IRental, Ownable {
         uint id;
         uint datetime;
         string drivername;
-        string drivinglicenseid;
+        bytes32 drivinglicenseid;
         address payable renter;
         uint duration;
         uint deposit;
@@ -123,7 +123,7 @@ function fetchCar(uint _uid) external view
 // datetime pass-in from external not to use timestamp in Solidity to avoid timestamp hacks.
 // Modifier, who can pay the deposit?
 // Is msg.value sufficient?
-function rentCar(uint _uid,string calldata _drivername,string calldata _drivinglicenseid, uint _datetime) external payable  returns(bool) {
+function rentCar(uint _uid,string calldata _drivername,bytes32 _drivinglicenseid, uint _datetime) external payable  returns(bool) {
     uint256 amount = msg.value;
     address payable _renter = msg.sender;
     Rentals[_renter] = Rental({
