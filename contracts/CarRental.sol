@@ -72,10 +72,16 @@ contract CarRental is ICar, IRental, Ownable {
 
     // Modifier to check the rental is refundable
     modifier IsRefundable(address renter) {
-    
     require((Rentals[renter].renter != address(0)) && (Rentals[renter].state == RentalState.Occuppied), "Not refundable with error");
+    
       _;
+   }
 
+    // Modifier to check if the driver's status booked, no double booking...
+    modifier canBook(address renter) {
+    require((Rentals[renter].state == RentalState.Vacant), "Double booking not allowed..");
+    
+      _;
    }
 
     // public constructor
@@ -123,7 +129,7 @@ function fetchCar(uint _uid) external view
 // datetime pass-in from external not to use timestamp in Solidity to avoid timestamp hacks.
 // Modifier, who can pay the deposit?
 // Is msg.value sufficient?
-function rentCar(uint _uid,string calldata _drivername,bytes32 _drivinglicenseid, uint _datetime) external payable  returns(bool) {
+function rentCar(uint _uid,string calldata _drivername,bytes32 _drivinglicenseid, uint _datetime) external payable canBook(msg.sender)  returns(bool) {
     uint256 amount = msg.value;
     address payable _renter = msg.sender;
     Rentals[_renter] = Rental({
@@ -148,7 +154,8 @@ function rentCar(uint _uid,string calldata _drivername,bytes32 _drivinglicenseid
 // Withdraw back the deposit to renter
 // Use to send() to get boolean status
 // Use Require to ensure the withdraw is succesfully done
-function withdraw(address payable _renter) external payable onlyOwner()  returns (bool){
+// Modifer to check is the driver's address is valid and refundable
+function withdraw(address payable _renter) external payable onlyOwner() IsRefundable(Rentals[_renter].renter)  returns (bool){
    
     uint withdrawAmount = Rentals[_renter].deposit;
     Rentals[_renter].deposit = 0;
@@ -156,7 +163,7 @@ function withdraw(address payable _renter) external payable onlyOwner()  returns
     require(result, "Withdraw failed");
     Rentals[_renter].state = RentalState.Vacant;
     emit LogWithdraw(_renter, withdrawAmount);
-    return true;
+    return result;
 }
 
 

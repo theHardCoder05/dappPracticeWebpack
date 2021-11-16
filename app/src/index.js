@@ -136,7 +136,9 @@ const App = {
     const { rentCar } = App.carSC.methods;
     const bytes32DrivingLicenseId = await App.hashFunction(drivinglicenseid);
 
-    await rentCar(carId, drivername, bytes32DrivingLicenseId, rentDate).send({ from: App.account, to: App.carSC._address, value: weiValue });
+    await rentCar(carId, drivername, bytes32DrivingLicenseId, rentDate).send({ from: App.account, to: App.carSC._address, value: weiValue })
+    .on('transactionHash', (hash) => alert('Transaction Hash: ' + hash) );
+  
    
 
   },
@@ -151,7 +153,7 @@ const App = {
     } 
 
     const { withdraw } = App.carSC.methods;
-    await withdraw(driveraddress).send({ from: App.account});
+    await withdraw(driveraddress).send({ from: App.account}).on('transactionHash', (hash) => alert('Transaction Hash: ' + hash) );;
   },
 
   

@@ -238,7 +238,7 @@ describe("Rental struct", () => {
 
 
     // Unit test cases
-    describe("Use case - Car", () => {
+    describe.skip("Use case - Car", () => {
         it("should add a new Car with CarName, Price, Uid, Year", async () => {
           await instance.addNewCar(carName, price, uid, year, { from: _owner });
     
@@ -278,7 +278,7 @@ describe("Rental struct", () => {
 
 
       //  Test Renting car
-      describe("Use case - Rent a car", () => {
+      describe.skip("Use case - Rent a car", () => {
         it("should rent a car with uid, render(address), datetime,", async () => {
           await instance.rentCar(uid, drivername, drivinglicenseid,  datetime, { from: bob, value: deposit });
           //let txHash = await web3.eth.sendTransaction({from: bob, to:instance.address, value:web3.utils.toWei('1', "ether") });
@@ -331,12 +331,22 @@ describe("Rental struct", () => {
     
 
       // Test Withdraw deposit
-      describe("Use case - Withdraw deposit" , () => {
+      describe.skip("Use case - Withdraw deposit" , () => {
         it("should rent and refund without error", async () => {
           await instance.rentCar(uid, drivername, drivinglicenseid,   datetime, { from: bob, value: deposit });
-          const withdrawResult = await instance.withdraw(bob ,{ from: _owner });
+          const tx = await instance.withdraw(bob ,{ from: _owner });
           const Rentalresult = await instance.fetchRental.call(bob);
           let SCBalanceAfter = await web3.eth.getBalance(instance.address)
+
+          if (tx.logs[0].event == "LogWithdraw") {
+            eventEmitted = true;
+          }
+    
+          assert.equal(
+            eventEmitted,
+            true,
+            "adding an item should emit a Shipped event",
+          );
           assert.equal(
             SCBalanceAfter,
             0,
@@ -355,4 +365,20 @@ describe("Rental struct", () => {
 
         });
       })
+
+
+      
+      //  Test Renting car with double booking
+      describe.skip("Use case - Rent a car double booking", () => {
+        it("should rent a car with uid, render(address), datetime,", async () => {
+          await instance.rentCar(uid, drivername, drivinglicenseid,  datetime, { from: bob, value: deposit });
+          await instance.rentCar(uid, drivername, drivinglicenseid,  datetime, { from: bob, value: deposit });
+         
+        });
+    
+      });
+
+
+
+
   });
