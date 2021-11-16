@@ -4,7 +4,7 @@ import carRentalArtifact from "../../build/contracts/carRental.json";
 const App = {
   web3: null,
   account: null,
-  carRetal: null,
+  carSC: null,
 
   start: async function() {
     const { web3 } = this;
@@ -14,7 +14,7 @@ const App = {
       // get contract instance
       const networkId = await web3.eth.net.getId();
       const deployedNetwork = carRentalArtifact.networks[networkId];
-      this.carRetal = new web3.eth.Contract(
+      this.carSC = new web3.eth.Contract(
         carRentalArtifact.abi,
         deployedNetwork.address,
       );
@@ -23,12 +23,14 @@ const App = {
       // get accounts
       const accounts = await web3.eth.getAccounts();
       this.account = accounts[0];
-      const sender = document.getElementById("sender");
-      sender.value = this.account;
+      const driver = document.getElementById("driver");
+      driver.value = this.account;
       const balance = await web3.eth.getBalance(deployedNetwork.address);
       console.log(web3.utils.fromWei(balance.toString(), 'ether'));
       const currentbalance = document.getElementById("currentdeposit");
       currentbalance.value = balance;
+      const agent = document.getElementById("agent");
+      agent.value = this.carSC._address;
       //this.refreshBalance();
       // this.monitorAccount();
       this.getEtherPrice();
@@ -118,20 +120,32 @@ const App = {
     const drivername = document.getElementById("dname").value;
     const drivinglicenseid = document.getElementById("dlilcenseid").value;
     console.log(App.hashFunction(drivinglicenseid));
+
     if (carId == "") {
       alert('Please pick a car');
+      return false;
     } 
     if (driverName == "") {
       alert('Driver name cannot be blank');
+      return false;
     } 
     if (deposit == "") {
       alert('Deposit cannot be blank');
+      return false;
     } 
     if (drivinglicenseid == "") {
       alert('Driving License Id cannot be blank');
+      return false;
     } 
 
     // If everything is okay then rent!!!
+    console.log( "asdasd" + App.carSC);
+    console.log(App.account);
+    console.log(deposit);
+     const { rentCar } = App.carSC.methods;
+     await rentCar(carId, drivername, drivinglicenseid, rentDate).send({ from: App.account, to: App.carSC._address, value: deposit });
+   
+
   },
   
   // reset the form values
@@ -151,20 +165,18 @@ window.addEventListener("load", function() {
  
 
   if (window.ethereum) {
-    const sender = document.getElementById("sender");
-
+    const driver = document.getElementById("driver");
+ 
     // use MetaMask's provider
     App.web3 = new Web3(window.ethereum);
     window.ethereum.enable(); // get permission to access accounts
     window.ethereum.on('accountsChanged', function (accounts) {
 
-      sender.value = accounts[0];
+      driver.value = accounts[0];
      });
  
   } else {
-    console.warn(
-      "No web3 detected. Falling back to http://127.0.0.1:8545. You should remove this fallback when you deploy live",
-    );
+    App.web3 = new Web3( new Web3.providers.HttpProvider("127.0.0.1:8545"));
     // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
     App.web3 = new Web3(
       new Web3.providers.HttpProvider("http://127.0.0.1:8545"),

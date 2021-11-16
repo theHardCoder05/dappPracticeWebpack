@@ -123,7 +123,7 @@ function fetchCar(uint _uid) external view
 // datetime pass-in from external not to use timestamp in Solidity to avoid timestamp hacks.
 // Modifier, who can pay the deposit?
 // Is msg.value sufficient?
-function rentCar(uint _uid,string calldata _drivername,string calldata _drivinglicenseid, uint _datetime) external payable paidEnough(Cars[_uid].price)  returns(bool) {
+function rentCar(uint _uid,string calldata _drivername,string calldata _drivinglicenseid, uint _datetime) external payable  returns(bool) {
     uint256 amount = msg.value;
     address payable _renter = msg.sender;
     Rentals[_renter] = Rental({
