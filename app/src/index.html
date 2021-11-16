@@ -14,23 +14,28 @@
   </style>
   <body>
     <div class="container">
+    
       <h1 class="display-1">Car Rental Dapp</h1>
+      <h1 class="display-4">Enjoy your journey!</h1>
       <div class="row">
         <div class="col-6">
           <label for="name" >Car Model Id:</label>
           <select class="form-control"  id="carId"  aria-label="Car Model Id">
-            <option selected>Pick a car </option>
+            <option selected value="">Pick a car </option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
           </select>
-          <label for="name" class="text-muted">Car Name:</label>
-          <input type="text" class="form-control" id="cname" required placeholder="name"  >
+          <label for="name" class="text-muted">Driver Name:</label>
+          <input type="text" class="form-control" id="dname" required placeholder="name"  >
           <label for="rentdate">Rent Date:</label>
-          <input type="date"  class="form-control" required id="rentdate" name="rentdate">
+          <input type="date"  class="form-control" required id="rentdate" name="rentdate" >
           <label for="depositamount">Deposit  Amount:</label>
+          <label for="depositamount" id="pricerate"></label>
           <input type="number"  class="form-control" id="depositamount" required name="depositamount" placeholder="1 (ether)">
-          <button type="button" class="btn btn-secondary">Clear</button>
+          <small id="depositHelp" class="form-text text-muted">The ($)amount you pay in the MetaMask.</small>
+          <br>
+          <button type="button"  onclick="App.reset()"  class="btn btn-secondary">Clear</button>
           <button type="button" onclick="App.rentCar()" class="btn btn-primary">Book</button>
         </div>
       
@@ -41,6 +46,7 @@
           <label for="sender">Current Balance Deposit(Escrow):</label>
           <input type="text" class="form-control" id="currentdeposit" readonly >
         </div>
+    
       </div>
       
       <!-- <div class="container">
@@ -72,6 +78,7 @@
       <!-- <button onclick="App.sendCoin()">Send MetaCoin</button> -->
       <!-- <button type="button" onclick="App.sendCoin()" class="btn btn-primary">Send MetaCoin</button>
       <p id="status"></p> -->
+      
       
     </div>
    

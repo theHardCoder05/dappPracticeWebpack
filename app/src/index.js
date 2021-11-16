@@ -31,6 +31,7 @@ const App = {
       currentbalance.value = balance;
       //this.refreshBalance();
       // this.monitorAccount();
+      this.getEtherPrice();
     } catch (error) {
       console.error("Could not connect to contract or chain.");
     }
@@ -62,7 +63,14 @@ const App = {
     this.refreshBalance();
   },
 
- 
+  getEtherPrice: async () => {
+    const price = await fetch('https://api.coinbase.com/v2/prices/ETH-USD/buy');
+    const result = await price.json();
+    console.log(result.data['amount']);
+    const depositHelp = document.getElementById("pricerate");
+    depositHelp.outerText = "The current rate is : " + result.data['amount'];
+  },
+
   setStatus: function(message) {
     const status = document.getElementById("status");
     status.innerHTML = message;
@@ -71,14 +79,31 @@ const App = {
   // Rent Car function 
   // Convert date to Epoch 
   rentCar: async () => {
-    const carId = document.getElementById("carId").value;
-    const carName = document.getElementById("cname").value;
+    const carId = document.getElementById("carId").value.trim();
+
+    const driverName = document.getElementById("dname").value.trim();
     const rentDate = Math.round(new Date(document.getElementById("rentdate").value).getTime() / 1000.0);
     const deposit = document.getElementById("depositamount").value;
-    alert(carId + carName + rentDate + deposit);
+  
+    if (carId == "") {
+      alert('Please pick a car');
+    } 
+    if (driverName == "") {
+      alert('Driver name cannot be blank');
+    } 
+    if (deposit == "") {
+      alert('Deposit cannot be blank');
+    } 
+
+    // If everything is okay then rent!!!
   },
   
-
+  // reset the form values
+  reset: async () => {
+    document.getElementById("carId").value = "";
+    document.getElementById("dname").value = "";
+    document.getElementById("depositamount").value = "";
+  }
 };
 
 
