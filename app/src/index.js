@@ -46,7 +46,7 @@ const App = {
           const balance = await web3.eth.getBalance(deployedNetwork.address);
 
           const currentbalance = document.getElementById("currentdeposit");
-          currentbalance.value = balance;
+          currentbalance.value = Web3.utils.fromWei(balance, 'ether')
 
         }
 
@@ -135,7 +135,7 @@ const App = {
     const weiValue = Web3.utils.toWei(deposit, 'ether');
     const { rentCar } = App.carSC.methods;
     const bytes32DrivingLicenseId = await App.hashFunction(drivinglicenseid);
-    console.log("aaaa" + bytes32DrivingLicenseId);
+
     await rentCar(carId, drivername, bytes32DrivingLicenseId, rentDate).send({ from: App.account, to: App.carSC._address, value: weiValue });
    
 
