@@ -6,7 +6,9 @@ import './Ownable.sol';
 contract CarRental is ICar, IRental, Ownable {
     // owner of the smart contract
    
-
+    // Drivers
+    // https://ethereum.stackexchange.com/questions/62824/how-can-i-build-this-list-of-addresses
+    //address[] public Drivers;
     // Enum status for car 
     enum State {ForRent, Rented, UnderMaintenance }
 
