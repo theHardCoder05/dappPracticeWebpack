@@ -25,10 +25,7 @@ const App = {
       this.account = accounts[0];
       const driver = document.getElementById("driver");
       driver.value = this.account;
-      const balance = await web3.eth.getBalance(deployedNetwork.address);
-      console.log(web3.utils.fromWei(balance.toString(), 'ether'));
-      const currentbalance = document.getElementById("currentdeposit");
-      currentbalance.value = balance;
+   
       const agent = document.getElementById("agent");
       agent.value = this.carSC._address;
       //this.refreshBalance();
@@ -43,10 +40,13 @@ const App = {
         {
           const price = await fetch('https://api.coinbase.com/v2/prices/ETH-USD/buy');
           const result = await price.json();
-          console.log(result.data['amount']);
-          
+         
           depositHelp.innerHTML = "The current rate is : " + result.data['amount'];
-      
+
+          const balance = await web3.eth.getBalance(deployedNetwork.address);
+
+          const currentbalance = document.getElementById("currentdeposit");
+          currentbalance.value = balance;
         }
 
 
