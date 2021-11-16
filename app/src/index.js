@@ -140,6 +140,20 @@ const App = {
    
 
   },
+
+
+  // Withdraw fund to driver
+  withdraw: async () => {
+    const driveraddress = document.getElementById("daddress").value.trim();
+    if (driveraddress == "") {
+      alert("Driver's MetaMask Address cannot be blank");
+      return false;
+    } 
+
+    const { withdraw } = App.carSC.methods;
+    await withdraw(driveraddress).send({ from: App.account});
+  },
+
   
   // reset the form values
   reset: async () => {
