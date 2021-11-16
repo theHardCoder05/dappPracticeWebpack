@@ -2,9 +2,10 @@
 pragma solidity >=0.5.16 <0.9.0;
 import './ICar.sol';
 import './IRental.sol';
-contract CarRental is ICar, IRental {
+import './Ownable.sol';
+contract CarRental is ICar, IRental, Ownable {
     // owner of the smart contract
-    address public owner;
+   
 
     // Enum status for car 
     enum State {ForRent, Rented, UnderMaintenance }
@@ -88,7 +89,7 @@ contract CarRental is ICar, IRental {
 
    // add new car 
    // uid should pass in from external instead of generate in the SC. Perhaps, this should use Oraclelisation
-function addNewCar(string calldata _carName, uint _price, uint _uid, uint _year) external returns(bool){
+function addNewCar(string calldata _carName, uint _price, uint _uid, uint _year) external onlyOwner()  returns(bool){
      
      Cars[_uid] = Car({
      name: _carName, 
@@ -147,7 +148,7 @@ function rentCar(uint _uid,string calldata _drivername,string calldata _drivingl
 // Withdraw back the deposit to renter
 // Use to send() to get boolean status
 // Use Require to ensure the withdraw is succesfully done
-function withdraw(address payable _renter) external payable isOwner()  returns (bool){
+function withdraw(address payable _renter) external payable onlyOwner()  returns (bool){
    
     uint withdrawAmount = Rentals[_renter].deposit;
     Rentals[_renter].deposit = 0;

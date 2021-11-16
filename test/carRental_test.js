@@ -239,7 +239,7 @@ describe("Rental struct", () => {
     // Unit test cases
     describe("Use case - Car", () => {
         it("should add a new Car with CarName, Price, Uid, Year", async () => {
-          await instance.addNewCar(carName, price, uid, year, { from: alice });
+          await instance.addNewCar(carName, price, uid, year, { from: _owner });
     
           const result = await instance.fetchCar.call(001);
           assert.equal(
