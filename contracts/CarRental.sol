@@ -138,6 +138,7 @@ function fetchCar(uint _uid) external view
 // datetime pass-in from external not to use timestamp in Solidity to avoid timestamp hacks.
 // Modifier, who can pay the deposit?
 // Is msg.value sufficient?
+//TODO: To handle if the driver record is exists no longer require to create new record.
 function rentCar(uint _uid,string calldata _drivername,bytes32 _drivinglicenseid, uint _datetime) external payable canBook(msg.sender) isNotOwner(msg.sender)  returns(bool) {
     uint256 amount = msg.value;
     address payable _renter = msg.sender;
@@ -169,6 +170,7 @@ function withdraw(address payable _renter) external payable onlyOwner() IsRefund
    
     uint withdrawAmount = Rentals[_renter].deposit;
     Rentals[_renter].deposit = 0;
+    
     bool result = _renter.send(withdrawAmount);
     require(result, "Withdraw failed");
     Rentals[_renter].state = RentalState.Vacant;

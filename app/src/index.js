@@ -1,10 +1,11 @@
 import Web3 from "web3";
 import carRentalArtifact from "../../build/contracts/carRental.json";
-
+import proxyRentalArtifact from "../../build/contracts/ProxyRental.json";
 const App = {
   web3: null,
   account: null,
   carSC: null,
+  proxyRental:null,
 
   start: async function() {
     const { web3 } = this;
@@ -20,6 +21,13 @@ const App = {
       );
       console.log("This is the deployed Smart Contract address - {0}", deployedNetwork.address);
 
+      // Factory Contract
+      const deployedNetworkProxy = proxyRentalArtifact.networks[networkId];
+      this.proxyRental = new web3.eth.Contract(
+        proxyRentalArtifact.abi,
+        deployedNetworkProxy.address,
+      );
+      console.log("This is the deployed Proxy Smart Contract address - {0}", deployedNetworkProxy.address);
       // get accounts
       const accounts = await web3.eth.getAccounts();
       this.account = accounts[0];
@@ -140,7 +148,7 @@ const App = {
     await rentCar(carId, drivername, bytes32DrivingLicenseId, rentDate).send({ from: App.account, to: App.carSC._address, value: weiValue })
     .on('transactionHash', (hash) => alert('Transaction Hash: ' + hash) );
   
-   
+    window.location.reload();
 
   },
 
@@ -154,7 +162,8 @@ const App = {
     } 
 
     const { withdraw } = App.carSC.methods;
-    await withdraw(driveraddress).send({ from: App.account}).on('transactionHash', (hash) => alert('Transaction Hash: ' + hash) );;
+    await withdraw(driveraddress).send({ from: App.account}).on('transactionHash', (hash) => alert('Transaction Hash: ' + hash) );
+    window.location.reload();
   },
 
   // Addresses data binding
