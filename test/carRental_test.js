@@ -278,7 +278,7 @@ describe("Rental struct", () => {
 
 
       //  Test Renting car
-      describe.skip("Use case - Rent a car", () => {
+      describe("Use case - Rent a car", () => {
         it("should rent a car with uid, render(address), datetime,", async () => {
           await instance.rentCar(uid, drivername, drivinglicenseid,  datetime, { from: bob, value: deposit });
           //let txHash = await web3.eth.sendTransaction({from: bob, to:instance.address, value:web3.utils.toWei('1', "ether") });
@@ -331,7 +331,7 @@ describe("Rental struct", () => {
     
 
       // Test Withdraw deposit
-      describe.skip("Use case - Withdraw deposit" , () => {
+      describe("Use case - Withdraw deposit" , () => {
         it("should rent and refund without error", async () => {
           await instance.rentCar(uid, drivername, drivinglicenseid,   datetime, { from: bob, value: deposit });
           const tx = await instance.withdraw(bob ,{ from: _owner });
@@ -366,8 +366,6 @@ describe("Rental struct", () => {
         });
       })
 
-
-      
       //  Test Renting car with double booking
       describe.skip("Use case - Rent a car double booking", () => {
         it("should rent a car with uid, render(address), datetime,", async () => {
@@ -379,6 +377,21 @@ describe("Rental struct", () => {
       });
 
 
-
+      // Test to fetch Drivers and the count
+        //  Test Renting car
+        describe("Use case - Rent a cars with return addresses and the count ", () => {
+          it("should return the expected addresses and count of the array", async () => {
+            await instance.rentCar(uid, drivername, drivinglicenseid,  datetime, { from: bob, value: deposit });
+            await instance.rentCar(uid, drivername, drivinglicenseid,  datetime, { from: alice, value: deposit });
+            const result = await instance.fetchRentals.call();
+            assert.equal(
+              result[1],
+              2,
+              "The count of the address should be 2",
+            );
+           
+          });
+      
+        });
 
   });

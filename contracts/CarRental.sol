@@ -8,7 +8,7 @@ contract CarRental is ICar, IRental, Ownable {
    
     // Drivers
     // https://ethereum.stackexchange.com/questions/62824/how-can-i-build-this-list-of-addresses
-    //address[] public Drivers;
+    address[] public Drivers;
     // Enum status for car 
     enum State {ForRent, Rented, UnderMaintenance }
 
@@ -79,6 +79,13 @@ contract CarRental is ICar, IRental, Ownable {
       _;
    }
 
+    // Owner not allowed for booking
+   modifier isNotOwner(address driver){
+
+       require(msg.sender != owner, "Owner not allowed for booking");
+       _;
+   }
+
     // Modifier to check if the driver's status booked, no double booking...
     modifier canBook(address renter) {
     require((Rentals[renter].state == RentalState.Vacant), "Double booking not allowed..");
@@ -131,7 +138,7 @@ function fetchCar(uint _uid) external view
 // datetime pass-in from external not to use timestamp in Solidity to avoid timestamp hacks.
 // Modifier, who can pay the deposit?
 // Is msg.value sufficient?
-function rentCar(uint _uid,string calldata _drivername,bytes32 _drivinglicenseid, uint _datetime) external payable canBook(msg.sender)  returns(bool) {
+function rentCar(uint _uid,string calldata _drivername,bytes32 _drivinglicenseid, uint _datetime) external payable canBook(msg.sender) isNotOwner(msg.sender)  returns(bool) {
     uint256 amount = msg.value;
     address payable _renter = msg.sender;
     Rentals[_renter] = Rental({
@@ -148,6 +155,7 @@ function rentCar(uint _uid,string calldata _drivername,bytes32 _drivinglicenseid
 
     rentalId = rentalId + 1;
     Cars[_uid].state = State.Rented;
+    Drivers.push(_renter);
     emit LogRentCar(rentalId);
     return true;
     
@@ -168,7 +176,7 @@ function withdraw(address payable _renter) external payable onlyOwner() IsRefund
     return result;
 }
 
-
+// Fetch Rental contract by address
 function fetchRental(address payable _renter) external view  returns(uint rid, uint datetime, uint duration, uint deposit,address payable renter, uint cid, uint state) {
 
         rid = Rentals[_renter].id; 
@@ -181,6 +189,11 @@ function fetchRental(address payable _renter) external view  returns(uint rid, u
 
 
 return (rid, datetime, duration, deposit, renter,cid,state); 
+}
+
+function fetchRentals() external view returns (address[] memory, uint){
+
+    return (Drivers, Drivers.length);
 }
 
 }

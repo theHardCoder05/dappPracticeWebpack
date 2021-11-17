@@ -54,13 +54,17 @@
       </div>
   <hr>
   <div class="row">
+    <label for="name" >Drivers:</label>
+    <select class="form-control"  id="drivers"  aria-label="Drivers">
 
-      <label for="name" class="text-muted">Driver's MetaMask  Address: (Only Owner)</label>
+    </select>
+    
+          <small id="depositHelp" class="form-text text-muted">Please enter the Driver's MetaMask address to withdraw.</small>
       <input type="text" class="form-control" id="daddress" required placeholder="ex: 0xaf59f5B438b1b198e95c2b297DFad35050293a6B"  >
-     
+      
       <br>
-     
       <button type="button" onclick="App.withdraw()" class="btn btn-primary">Withdraw!</button>
+      
     </div>
   
  

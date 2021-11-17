@@ -31,7 +31,7 @@ const App = {
       //this.refreshBalance();
       // this.monitorAccount();
       this.getEtherPrice();
-
+      this.getAddresses();
         var intervalID = setInterval(getPrice, 5000);
         
          
@@ -48,6 +48,7 @@ const App = {
           const currentbalance = document.getElementById("currentdeposit");
           currentbalance.value = Web3.utils.fromWei(balance, 'ether')
 
+         
         }
 
     } catch (error) {
@@ -156,6 +157,21 @@ const App = {
     await withdraw(driveraddress).send({ from: App.account}).on('transactionHash', (hash) => alert('Transaction Hash: ' + hash) );;
   },
 
+  // Addresses data binding
+  getAddresses: async () => {
+    const { fetchRentals } = App.carSC.methods;
+    const drivers = await fetchRentals().call();
+    const driversList = document.getElementById("drivers");
+    console.log("Drivers:" + drivers[0]);
+    console.log("Drivers:" + drivers[1]);
+    for (let i = 0; i < drivers[1]; i++){
+      var opt = document.createElement('option');
+      opt.value = i;
+      opt.innerHTML = drivers[0][i];
+      driversList.appendChild(opt);
+    }
+
+  },
   
   // reset the form values
   reset: async () => {
