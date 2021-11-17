@@ -14,7 +14,7 @@ contract ProxyRental   {
     }
     
     
-    function fetchContracts(address _base) external returns(address[] memory)  {
+    function fetchContractsByProxy(address _base) external returns(address[] memory)  {
         sender = msg.sender;
         (bool status, bytes memory returnData) = _base.call(abi.encodeWithSignature("fetchRentals()"));
         require(status,"Failed to retrieve rentals");

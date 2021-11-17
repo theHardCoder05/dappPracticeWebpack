@@ -1,5 +1,6 @@
 let BN = web3.utils.BN;
 let CarRental = artifacts.require("CarRental");
+let ProxyRental = artifacts.require("ProxyRental");
 let { catchRevert } = require("./exceptionsHelpers.js");
 const { cars: CarStruct, isDefined, isPayable, isType, rentals:RentalStruct } = require("./ast-helper");
 
@@ -25,6 +26,12 @@ contract("Car Rental", function (accounts) {
   
     beforeEach(async () => {
       instance = await CarRental.new();
+     
+    });
+
+    // Initiatiate Proxy contract
+    beforeEach(async () => {
+      proxyInstance = await ProxyRental.new();
      
     });
 
@@ -393,5 +400,20 @@ describe("Rental struct", () => {
           });
       
         });
-
+        // Test proxy contract
+        describe("Use case - Yeild out all rentals through proxy contract ", () => {
+          it("should return the expected addresses", async () => {
+            await instance.rentCar(uid, drivername, drivinglicenseid,  datetime, { from: bob, value: deposit });
+            await instance.rentCar(uid, drivername, drivinglicenseid,  datetime, { from: alice, value: deposit });
+            const result = await proxyInstance.fetchContractsByProxy.call(instance.address);
+            console.log(result);
+            assert.equal(
+              result.length,
+              2,
+              "The count of the address should be 2",
+            );
+           
+          });
+      
+        });
   });
