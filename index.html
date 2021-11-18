@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Car Rental Dapp</title>
+    <script src="bundle.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+  </head>
+  <style>
+    input {
+      display: block;
+      margin-bottom: 12px;
+    }
+  </style>
+  <body>
+    <div class="container">
+    
+      <h1 class="display-1">Car Rental Dapp</h1>
+      <h1 class="display-4">Enjoy your journey!</h1>
+      <div class="row">
+        <div class="col-6">
+          <label for="name" >Car Model Id:</label>
+          <select class="form-control"  id="carId"  aria-label="Car Model Id">
+            <option selected value="">Pick a car </option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+          <label for="name" class="text-muted">Driver Name:</label>
+          <input type="text" class="form-control" id="dname" required placeholder="ex: Jack Daniel"  >
+          <label for="name" class="text-muted">Driver License ID:</label>
+          <input type="password" class="form-control" id="dlilcenseid" required placeholder="ex:A-98776-001"  >
+          <label for="rentdate">Rent Date:</label>
+          <input type="date"  class="form-control" required id="rentdate" name="rentdate" >
+          <label for="depositamount">Deposit  Amount:</label>
+          <label for="depositamount" id="pricerate"></label>
+          <input type="number"  class="form-control" id="depositamount" required name="depositamount" placeholder="1 (ether)">
+          <small id="depositHelp" class="form-text text-muted">The ($)amount you pay in the MetaMask.</small>
+          <br>
+          <button type="button"  onclick="App.reset()"  class="btn btn-secondary">Clear</button>
+          <button type="button" onclick="App.rentCar()" class="btn btn-primary">Book</button>
+        </div>
+      
+     
+        <div class="col-6">
+          <label for="sender">Current Address:</label>
+          <input type="text" class="form-control" id="sender" placeholder="address" readonly >
+          <label for="sender">Current Balance Deposit(Escrow):</label>
+          <input type="text" class="form-control" id="currentdeposit" readonly >
+        </div>
+    
+      </div>
+      
+      <!-- <div class="container">
+        <h2>List</h2>
+        <div class="row">
+          <div class="col-md-12">
+ 
+        <table class="table">
+          <tr>
+            <th>Car Id</th>
+            <th>Car Name</th>
+            <th>Date</th>
+            <th>Deposit</th>
+            <th>State</th>
+          </tr>
+          <tr>
+            <td>Alfreds Futterkiste</td>
+            <td>Maria Anders</td>
+            <td>Germany</td>
+            <td>Germany</td>
+            <td>Germany</td>
+          </tr>
+        
+        </table>
+      </div>
+      </div>
+    </div> -->
+      </div>
+      <!-- <button onclick="App.sendCoin()">Send MetaCoin</button> -->
+      <!-- <button type="button" onclick="App.sendCoin()" class="btn btn-primary">Send MetaCoin</button>
+      <p id="status"></p> -->
+      
+      
+    </div>
+   
+  
+ 
+   
+  </body>
+</html>
