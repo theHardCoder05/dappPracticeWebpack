@@ -5,11 +5,12 @@ import './IRental.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
 import '@openzeppelin/contracts/access/AccessControl.sol';
 import '@openzeppelin/contracts/utils/Counters.sol';
+import '@openzeppelin/contracts/security/ReentrancyGuard.sol';
 /**
 The abstract of the Smart Contract is to achieve disintermidiation objective. Drivers keep thier deposit in crypto (eth) in the Escrow Smart Contract.
 This project potentially involves multiple entities and authoritises for due-diligent process. Such as KYC.
  */
-contract CarRental is IRental, Ownable, AccessControl {
+contract CarRental is IRental, Ownable, AccessControl, ReentrancyGuard {
 
     /*
     Use the Counter API to generate rental id.
@@ -147,7 +148,7 @@ contract CarRental is IRental, Ownable, AccessControl {
  @ driver name - Name of the driver. Calldata to optimise the gas.
  @ driving license id - Driving Identify of the driver, this information should be masked and hashed to compliance with GDPR.
  @ booking date - The exact booking date.
- @return - True if no errors.
+ @return - True. If no errors.
  */
 function rentCar(uint _uid,string calldata _drivername,bytes32 _drivinglicenseid, uint _datetime) external override payable canBook(msg.sender) isNotOwner(msg.sender)  returns(bool) {
     uint256 amount = msg.value;
@@ -178,9 +179,9 @@ function rentCar(uint _uid,string calldata _drivername,bytes32 _drivinglicenseid
  To withdraw the correspondence fund to the particular driver based on the address.
  @ driver - The Driver
  Require to check if the msg.sender has the permission/ role to perform withdraw.
- Return  - True if no errors
+ Return  - True. If no errors
  */
-function withdraw(address payable driver) external override payable onlyOwner() IsRefundable(Rentals[driver].driver)  returns (bool){
+function withdraw(address payable driver) external override payable nonReentrant onlyOwner() IsRefundable(Rentals[driver].driver)  returns (bool){
     require(hasRole(WITHDRAWER_ROLE, msg.sender), " Withdrawer permission not granted.");
     uint withdrawAmount = Rentals[driver].deposit;
     Rentals[driver].deposit = 0;
