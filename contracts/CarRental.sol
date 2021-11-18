@@ -4,11 +4,19 @@ pragma solidity ^0.8.3;
 import './IRental.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
 import '@openzeppelin/contracts/access/AccessControl.sol';
+import '@openzeppelin/contracts/utils/Counters.sol';
 /**
 The abstract of the Smart Contract is to achieve disintermidiation objective. Drivers keep thier deposit in crypto (eth) in the Escrow Smart Contract.
 This project potentially involves multiple entities and authoritises for due-diligent process. Such as KYC.
  */
 contract CarRental is IRental, Ownable, AccessControl {
+
+    /*
+    Use the Counter API to generate rental id.
+     */
+    using Counters for Counters.Counter;
+    Counters.Counter private _rentalId;
+
     /*
     Define a withdrawer role in this contract
      */
@@ -123,10 +131,10 @@ contract CarRental is IRental, Ownable, AccessControl {
 
     /*
       Constructor
+      Give the withdrawer role to onwer.
      */
     constructor() {
         _setupRole(WITHDRAWER_ROLE,msg.sender);
-        rentalId = 0;
         emit LogForCreated(address(this));
     }
 
@@ -156,7 +164,8 @@ function rentCar(uint _uid,string calldata _drivername,bytes32 _drivinglicenseid
     state: RentalState.Occuppied
     });
 
-    rentalId = rentalId + 1;
+    _rentalId.increment();
+    rentalId = _rentalId.current();
     Drivers.push(driver);
     emit LogRentCar(rentalId);
     return true;
