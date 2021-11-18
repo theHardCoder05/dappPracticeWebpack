@@ -1,199 +1,212 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.5.16 <0.9.0;
-import './ICar.sol';
+pragma solidity ^0.8.3;
+
 import './IRental.sol';
-import './Ownable.sol';
-contract CarRental is ICar, IRental, Ownable {
-    // owner of the smart contract
+import '@openzeppelin/contracts/access/Ownable.sol';
+import '@openzeppelin/contracts/access/AccessControl.sol';
+/**
+The abstract of the Smart Contract is to achieve disintermidiation objective. Drivers keep thier deposit in crypto (eth) in the Escrow Smart Contract.
+This project potentially involves multiple entities and authoritises for due-diligent process. Such as KYC.
+ */
+contract CarRental is IRental, Ownable, AccessControl {
+    /*
+    Define a withdrawer role in this contract
+     */
+    bytes32 public constant WITHDRAWER_ROLE = keccak256("WITHDRAWER_ROLE");
    
-    // Drivers
+    /*
+    Array list to store all drivers
+     */
     // https://ethereum.stackexchange.com/questions/62824/how-can-i-build-this-list-of-addresses
     address[] public Drivers;
-    // Enum status for car 
-    enum State {ForRent, Rented, UnderMaintenance }
+    
 
-    // Enum status for car 
+    /*
+    Enumeration of Rental contract's state to determine the contract status.
+     */
     enum RentalState {Vacant, Occuppied }
 
-    uint Total;
-    // rental_id 
+    /*
+    Auto generated ID - Potentially, could use ChainLink(Oracle).
+     */
     uint rentalId;
-    // Constant values - 2 weeks
+    
+    /*
+    Constant value for Rental contract duration - 2 weeks - Pontentially for TimeLockedControl
+     */
     uint constant Duration = 14;
-    // Cars records
-    mapping(uint => Car) public Cars;
-    // Rental records
+   
+    /*
+    Rentals mapping to addresses
+     */
     mapping(address => Rental) public Rentals;
-    // events for car rental
+
+
+    /*
+    Event log for Car Rent
+     */
     event LogForRent(uint id);
 
-    // event log for Occuppied
+    /*
+    Event log for Car Rent - Status change to Occuppied(Booked)
+     */
     event LogForOccuppied(uint id);
 
-    // event Car rental contract created
+
+
+    /*
+    Event log for Rental contract created
+     */
     event LogForCreated(address add);
   
-    // event log for Rental
+
+    /*
+    Event log for renting a car
+     */
     event LogRentCar(uint rentalId);
 
-    // event log for withdraw
+    /*
+    Event log for withdraw fund upon car returned
+     */
     event LogWithdraw(address render, uint deposit);
-    // Car Struct
-    struct Car {
-        uint uid;
-        string name;
-        uint price;
-        State state;
-        uint year;
-       
-    }
-
-    // Rental Struct
+ 
+     /*
+      Rental Struct Object/Entity
+     */
+   
     struct Rental {
         uint id;
         uint datetime;
         string drivername;
         bytes32 drivinglicenseid;
-        address payable renter;
+        address payable driver;
         uint duration;
         uint deposit;
         uint cid;
         RentalState state;
     }
 
-    // Only Owner
-    modifier isOwner { 
-        require (msg.sender == owner); 
-        _;
-    }
-    // modifier to check paidEnough
+   
+    /*
+      Modifier to check whether the msg.value is sufficient to pay the deposit.
+     */
       modifier paidEnough(uint _deposit) { 
-        require(msg.value >= _deposit, "Insufficient fund"); 
+        require(msg.value >= _deposit, "Insufficient fund to pay deposit"); 
         _;
     }
 
-    // Modifier to check the rental is refundable
-    modifier IsRefundable(address renter) {
-    require((Rentals[renter].renter != address(0)) && (Rentals[renter].state == RentalState.Occuppied), "Not refundable with error");
+    /*
+      Modifier to check whether the Driver's address whether is refundable.
+     */
+    modifier IsRefundable(address driver) {
+    require((Rentals[driver].driver != address(0)) && (Rentals[driver].state == RentalState.Occuppied), "Not refundable with error");
     
       _;
    }
 
-    // Owner not allowed for booking
+  /*
+   Modifier - To prevent Owner itself to make a car booking. 
+   */
    modifier isNotOwner(address driver){
-
-       require(msg.sender != owner, "Owner not allowed for booking");
+       require(msg.sender != owner(), "Owner is not allowed for bookings");
        _;
    }
 
-    // Modifier to check if the driver's status booked, no double booking...
-    modifier canBook(address renter) {
-    require((Rentals[renter].state == RentalState.Vacant), "Double booking not allowed..");
+     /*
+      Modifier to check whether the Driver double booking
+     */
+    modifier canBook(address driver) {
+    require((Rentals[driver].state == RentalState.Vacant), "Double booking is not allowed..");
     
       _;
    }
 
-    // public constructor
-    constructor() public  {
-        owner = msg.sender;
+    /*
+      Constructor
+     */
+    constructor() {
+        _setupRole(WITHDRAWER_ROLE,msg.sender);
         rentalId = 0;
         emit LogForCreated(address(this));
     }
 
     
 
-   // add new car 
-   // uid should pass in from external instead of generate in the SC. Perhaps, this should use Oraclelisation
-function addNewCar(string calldata _carName, uint _price, uint _uid, uint _year) external onlyOwner()  returns(bool){
-     
-     Cars[_uid] = Car({
-     name: _carName, 
-     price: _price, 
-     uid: _uid,
-     state: State.ForRent, 
-     year: _year
-    
-    
-    });
-    
-    emit LogForRent(_uid);
-    return true;
-}
 
-// Fetch car by uid
-function fetchCar(uint _uid) external view 
-     returns (uint Uid, string memory carName, uint price, uint state, uint year) 
-   { 
-    carName = Cars[_uid].name; 
-    Uid =  Cars[_uid].uid; 
-    price  = Cars[_uid].price; 
-    state = uint(Cars[_uid].state); 
-    year  = Cars[_uid].year; 
-
-     return (Uid, carName, price, state, year); 
-  } 
-
-
-// Rent car function with uid and renter's address
-// datetime pass-in from external not to use timestamp in Solidity to avoid timestamp hacks.
-// Modifier, who can pay the deposit?
-// Is msg.value sufficient?
-//TODO: To handle if the driver record is exists no longer require to create new record.
-function rentCar(uint _uid,string calldata _drivername,bytes32 _drivinglicenseid, uint _datetime) external payable canBook(msg.sender) isNotOwner(msg.sender)  returns(bool) {
+/*
+ @notice Car renting function 
+ @ uid - Unique id of the vehicle (It can be registration number or RFID)
+ @ driver name - Name of the driver. Calldata to optimise the gas.
+ @ driving license id - Driving Identify of the driver, this information should be masked and hashed to compliance with GDPR.
+ @ booking date - The exact booking date.
+ @return - True if no errors.
+ */
+function rentCar(uint _uid,string calldata _drivername,bytes32 _drivinglicenseid, uint _datetime) external override payable canBook(msg.sender) isNotOwner(msg.sender)  returns(bool) {
     uint256 amount = msg.value;
-    address payable _renter = msg.sender;
-    Rentals[_renter] = Rental({
+    address payable driver = payable(msg.sender);
+    Rentals[driver] = Rental({
     id: rentalId,
     drivername: _drivername,
     drivinglicenseid: _drivinglicenseid,
     datetime: _datetime,
     duration: Duration,
     deposit:amount,
-    renter: _renter,
+    driver: driver,
     cid:_uid,
     state: RentalState.Occuppied
     });
 
     rentalId = rentalId + 1;
-    Cars[_uid].state = State.Rented;
-    Drivers.push(_renter);
+    Drivers.push(driver);
     emit LogRentCar(rentalId);
     return true;
     
 }
 
-// Withdraw back the deposit to renter
-// Use to send() to get boolean status
-// Use Require to ensure the withdraw is succesfully done
-// Modifer to check is the driver's address is valid and refundable
-function withdraw(address payable _renter) external payable onlyOwner() IsRefundable(Rentals[_renter].renter)  returns (bool){
-   
-    uint withdrawAmount = Rentals[_renter].deposit;
-    Rentals[_renter].deposit = 0;
+
+/*
+ @notice Withdraw function
+ To withdraw the correspondence fund to the particular driver based on the address.
+ @ driver - The Driver
+ Require to check if the msg.sender has the permission/ role to perform withdraw.
+ Return  - True if no errors
+ */
+function withdraw(address payable driver) external override payable onlyOwner() IsRefundable(Rentals[driver].driver)  returns (bool){
+    require(hasRole(WITHDRAWER_ROLE, msg.sender), " Withdrawer permission not granted.");
+    uint withdrawAmount = Rentals[driver].deposit;
+    Rentals[driver].deposit = 0;
     
-    bool result = _renter.send(withdrawAmount);
+    bool result = driver.send(withdrawAmount);
     require(result, "Withdraw failed");
-    Rentals[_renter].state = RentalState.Vacant;
-    emit LogWithdraw(_renter, withdrawAmount);
+    Rentals[driver].state = RentalState.Vacant;
+    emit LogWithdraw(driver, withdrawAmount);
     return result;
 }
 
-// Fetch Rental contract by address
-function fetchRental(address payable _renter) external view  returns(uint rid, uint datetime, uint duration, uint deposit,address payable renter, uint cid, uint state) {
+/*
+@notice Fetch Rental by driver's address(0x0)
+Return the Rental Struct object
+ */
+function fetchRental(address payable driver) external override view  returns(uint rid, uint datetime, uint duration, uint deposit,address payable renter, uint cid, uint state) {
 
-        rid = Rentals[_renter].id; 
-        datetime = Rentals[_renter].datetime;
-        duration = Rentals[_renter].duration;
-        deposit = Rentals[_renter].deposit;
-        renter = Rentals[_renter].renter;
-        cid = Rentals[_renter].cid;  
-        state = uint(Rentals[_renter].state);  
+        rid = Rentals[driver].id; 
+        datetime = Rentals[driver].datetime;
+        duration = Rentals[driver].duration;
+        deposit = Rentals[driver].deposit;
+        renter = Rentals[driver].driver;
+        cid = Rentals[driver].cid;  
+        state = uint(Rentals[driver].state);  
 
 
 return (rid, datetime, duration, deposit, renter,cid,state); 
 }
 
-function fetchRentals() external view returns (address[] memory, uint){
+
+/*
+@notice Fetch all Rentals
+Return the Rental Struct object
+ */
+function fetchRentals() external override view returns (address[] memory, uint){
 
     return (Drivers, Drivers.length);
 }

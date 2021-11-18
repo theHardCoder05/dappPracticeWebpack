@@ -23,20 +23,27 @@ contract("Car Rental", function (accounts) {
     const datetime =  1636869118;
 
     let instance;
-  
+    let proxyInstance;
+    /*
+     * Initiate Car Rental contract 
+     */
     beforeEach(async () => {
       instance = await CarRental.new();
      
     });
 
-    // Initiatiate Proxy contract
+    /*
+     * Initiate Proxy contract 
+     */
     beforeEach(async () => {
       proxyInstance = await ProxyRental.new();
      
     });
 
 
-     // To make sure the public owner is exists
+     /*
+     * To test if owner is exists
+     */
      describe("Variables", () => {
         it("should have an owner", async () => {
           assert.equal(typeof instance.owner, 'function', "the contract has no owner");
@@ -44,31 +51,9 @@ contract("Car Rental", function (accounts) {
         
     });
 
-    // TO check all enum states exists
-    describe("enum State", () => {
-        let enumState;
-        before(() => {
-          enumState = CarRental.enums.State;
-          assert(
-            enumState,
-            "The contract should define an Enum called State"
-          );
-        });
-        it("should define `ForRent`", () => {
-            assert(
-              enumState.hasOwnProperty('ForRent'),
-              "The enum does not have a `ForRent` value"
-            );
-          });
-
-          it("should define `UnderMaintenance`", () => {
-            assert(
-              enumState.hasOwnProperty('UnderMaintenance'),
-              "The enum does not have a `UnderMaintenance` value"
-            );
-          });
-    });
-    // Check Rental Status 
+    /*
+     * To test if all Rental enumeration 
+     */
     describe("enum Rental State", () => {
         let enumState;
         before(() => {
@@ -92,199 +77,91 @@ contract("Car Rental", function (accounts) {
             );
           });
     });
-    // To check the properties of Car Struct
-    describe("Car struct", () => {
+ 
+    
+      /*
+     * Initiate Car Rental contract struct ensure all properties are exists 
+     */
+      describe("Rental struct", () => {
         let subjectStruct;
-  
+
         before(() => {
-          subjectStruct = CarStruct(CarRental);
+          subjectStruct = RentalStruct(CarRental);
           assert(
             subjectStruct !== null, 
-            "The contract should define an `Car Struct`"
+            "The contract should define an `Rental Struct`"
           );
         });
-        it("should have a `name`", () => {
+        it("should have a `id`", () => {
             assert(
-              isDefined(subjectStruct)("name"), 
-              "Struct Car should have a `name` member"
+              isDefined(subjectStruct)("id"), 
+              "Struct Rental should have a `id` member"
             );
             assert(
-              isType(subjectStruct)("name")("string"), 
-              "`name` should be of type `string`"
+              isType(subjectStruct)("id")("uint"), 
+              "`id` should be of type `uint`"
             );
+          });   
+          it("should have a `datetime`", () => {
+            assert(
+              isDefined(subjectStruct)("datetime"), 
+              "Struct Rental should have a `datetime` member"
+            );
+            assert(
+              isType(subjectStruct)("datetime")("uint"), 
+              "`datetime` should be of type `uint`"
+            );
+          }); 
+          it("should have a `duration`", () => {
+            assert(
+              isDefined(subjectStruct)("duration"), 
+              "Struct Rental should have a `duration` member"
+            );
+            assert(
+              isType(subjectStruct)("duration")("uint"), 
+              "`duration` should be of type `uint`"
+            );
+          }); 
+          it("should have a `deposit`", () => {
+            assert(
+              isDefined(subjectStruct)("deposit"), 
+              "Struct Rental should have a `deposit` member"
+            );
+            assert(
+              isType(subjectStruct)("deposit")("uint"), 
+              "`deposit` should be of type `uint`"
+            );
+            
           });
 
-          it("should have a `price`", () => {
+          it("should have a `drivername`", () => {
             assert(
-              isDefined(subjectStruct)("price"), 
-              "Struct Car should have a `price` member"
+              isDefined(subjectStruct)("drivername"), 
+              "Struct Rental should have a `drivername` member"
             );
             assert(
-              isType(subjectStruct)("price")("uint"), 
-              "`price` should be of type `uint`"
+              isType(subjectStruct)("drivername")("string"), 
+              "`drivername` should be of type `string`"
             );
+            
           });
 
-          it("should have a `uid`", () => {
+          it("should have a `drivinglicenseid`", () => {
             assert(
-              isDefined(subjectStruct)("uid"), 
-              "Struct Car should have a `uid` member"
+              isDefined(subjectStruct)("drivinglicenseid"), 
+              "Struct Rental should have a `drivinglicenseid` member"
             );
             assert(
-              isType(subjectStruct)("uid")("uint"), 
-              "`uid` should be of type `uint`"
+              isType(subjectStruct)("drivinglicenseid")("bytes32"), 
+              "`drivinglicenseid` should be of type `bytes32`"
             );
+            
           });
-
-          it("should have a `year`", () => {
-            assert(
-              isDefined(subjectStruct)("year"), 
-              "Struct Car should have a `year` member"
-            );
-            assert(
-              isType(subjectStruct)("year")("uint"), 
-              "`year` should be of type `uint`"
-            );
-          });
-
-          it("should have a `state`", () => {
-            assert(
-              isDefined(subjectStruct)("state"), 
-              "Struct Car should have a `state` member"
-            );
-            assert(
-              isType(subjectStruct)("state")("State"), 
-              "`state` should be of type `State`"
-            );
-          });
-    
-    
-    
-         
-    });
-    
- 
-// To check the properties of Rental Struct
-describe("Rental struct", () => {
-  let subjectStruct;
-
-  before(() => {
-    subjectStruct = RentalStruct(CarRental);
-    assert(
-      subjectStruct !== null, 
-      "The contract should define an `Rental Struct`"
-    );
-  });
-  it("should have a `id`", () => {
-      assert(
-        isDefined(subjectStruct)("id"), 
-        "Struct Rental should have a `id` member"
-      );
-      assert(
-        isType(subjectStruct)("id")("uint"), 
-        "`id` should be of type `uint`"
-      );
-    });   
-    it("should have a `datetime`", () => {
-      assert(
-        isDefined(subjectStruct)("datetime"), 
-        "Struct Rental should have a `datetime` member"
-      );
-      assert(
-        isType(subjectStruct)("datetime")("uint"), 
-        "`datetime` should be of type `uint`"
-      );
-    }); 
-    it("should have a `duration`", () => {
-      assert(
-        isDefined(subjectStruct)("duration"), 
-        "Struct Rental should have a `duration` member"
-      );
-      assert(
-        isType(subjectStruct)("duration")("uint"), 
-        "`duration` should be of type `uint`"
-      );
-    }); 
-    it("should have a `deposit`", () => {
-      assert(
-        isDefined(subjectStruct)("deposit"), 
-        "Struct Rental should have a `deposit` member"
-      );
-      assert(
-        isType(subjectStruct)("deposit")("uint"), 
-        "`deposit` should be of type `uint`"
-      );
-      
-    });
-
-    it("should have a `drivername`", () => {
-      assert(
-        isDefined(subjectStruct)("drivername"), 
-        "Struct Rental should have a `drivername` member"
-      );
-      assert(
-        isType(subjectStruct)("drivername")("string"), 
-        "`drivername` should be of type `string`"
-      );
-      
-    });
-
-    it("should have a `drivinglicenseid`", () => {
-      assert(
-        isDefined(subjectStruct)("drivinglicenseid"), 
-        "Struct Rental should have a `drivinglicenseid` member"
-      );
-      assert(
-        isType(subjectStruct)("drivinglicenseid")("bytes32"), 
-        "`drivinglicenseid` should be of type `bytes32`"
-      );
-      
-    });
-});
-
-
-
-    // Unit test cases
-    describe.skip("Use case - Car", () => {
-        it("should add a new Car with CarName, Price, Uid, Year", async () => {
-          await instance.addNewCar(carName, price, uid, year, { from: _owner });
-    
-          const result = await instance.fetchCar.call(001);
-          assert.equal(
-            result[0],
-            uid,
-            "the Uid of the last added Car does not match the expected value",
-          );
-          assert.equal(
-            result[1],
-            carName,
-            "the carName of the last added Car does not match the expected value",
-          );
-          assert.equal(
-            result[2],
-            price,
-            "the price of the last added Car does not match the expected value",
-          );
-          assert.equal(
-            result[3],
-            CarRental.State.ForRent,
-            "the State of the last added Car does not match the expected value",
-          );
-
-          assert.equal(
-            result[4],
-            year,
-            "the Year of the last added Car does not match the expected value",
-          );
-         
-        });
-    
       });
-    
 
-
-
-      //  Test Renting car
+      /*
+     * To test the Rent Car function with expected result
+     */
       describe("Use case - Rent a car", () => {
         it("should rent a car with uid, render(address), datetime,", async () => {
           await instance.rentCar(uid, drivername, drivinglicenseid,  datetime, { from: bob, value: deposit });
@@ -293,14 +170,7 @@ describe("Rental struct", () => {
           const result = await instance.fetchRental.call(bob);
           let SCBalance = await web3.eth.getBalance(instance.address)
           console.log("Current Balance in escrow:" +  SCBalance);
-          const carResult = await instance.fetchCar.call(001);
-          assert.equal(
-            carResult[3],
-            CarRental.State.Rented,
-            "the status of the car does not match the expected value",
-          );
-
-
+    
           assert.equal(
             result[0],
             0,
@@ -337,7 +207,9 @@ describe("Rental struct", () => {
       });
     
 
-      // Test Withdraw deposit
+      /*
+     * To test the Withdraw function to ensure all result are met the expectation.
+     */
       describe("Use case - Withdraw deposit" , () => {
         it("should rent and refund without error", async () => {
           await instance.rentCar(uid, drivername, drivinglicenseid,   datetime, { from: bob, value: deposit });
@@ -373,7 +245,9 @@ describe("Rental struct", () => {
         });
       })
 
-      //  Test Renting car with double booking
+     /*
+     * To test make sure no same driver is double booking
+     */
       describe.skip("Use case - Rent a car double booking", () => {
         it("should rent a car with uid, render(address), datetime,", async () => {
           await instance.rentCar(uid, drivername, drivinglicenseid,  datetime, { from: bob, value: deposit });
@@ -384,8 +258,9 @@ describe("Rental struct", () => {
       });
 
 
-      // Test to fetch Drivers and the count
-        //  Test Renting car
+     /*
+     * To test to get all rentals
+     */
         describe("Use case - Rent a cars with return addresses and the count ", () => {
           it("should return the expected addresses and count of the array", async () => {
             await instance.rentCar(uid, drivername, drivinglicenseid,  datetime, { from: bob, value: deposit });

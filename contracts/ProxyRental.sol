@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.5.16 <0.9.0;
+pragma solidity ^0.8.3;
 import './ICar.sol';
 import './IRental.sol';
-import './Ownable.sol';
 import './CarRental.sol';
+
 
 contract ProxyRental   {
    
     address public sender;
-    address public Owner;
-    constructor() public {
+   
+    constructor()  {
        
     }
     
