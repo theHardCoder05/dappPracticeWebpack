@@ -1,11 +1,11 @@
 import Web3 from "web3";
 import carRentalArtifact from "../../build/contracts/carRental.json";
-import proxyRentalArtifact from "../../build/contracts/ProxyRental.json";
+import OchestratorArtifact from "../../build/contracts/Ochestrator.json";
 const App = {
   web3: null,
   account: null,
   carSC: null,
-  proxyRental:null,
+  Ochestrator:null,
 
   start: async function() {
     const { web3 } = this;
@@ -22,9 +22,9 @@ const App = {
       console.log("This is the deployed Smart Contract address - {0}", deployedNetwork.address);
 
       // Factory Contract
-      const deployedNetworkProxy = proxyRentalArtifact.networks[networkId];
-      this.proxyRental = new web3.eth.Contract(
-        proxyRentalArtifact.abi,
+      const deployedNetworkProxy = OchestratorArtifact.networks[networkId];
+      this.Ochestrator = new web3.eth.Contract(
+        OchestratorArtifact.abi,
         deployedNetworkProxy.address,
       );
       console.log("This is the deployed Proxy Smart Contract address - {0}", deployedNetworkProxy.address);

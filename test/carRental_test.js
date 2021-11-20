@@ -1,6 +1,6 @@
 let BN = web3.utils.BN;
 let CarRental = artifacts.require("CarRental");
-let ProxyRental = artifacts.require("ProxyRental");
+let Ochestrator = artifacts.require("Ochestrator");
 let { catchRevert } = require("./exceptionsHelpers.js");
 const { cars: CarStruct, isDefined, isPayable, isType, rentals:RentalStruct } = require("./ast-helper");
 
@@ -36,7 +36,7 @@ contract("Car Rental", function (accounts) {
      * Initiate Proxy contract 
      */
     beforeEach(async () => {
-      proxyInstance = await ProxyRental.new();
+      pchestraInstance = await Ochestrator.new();
      
     });
 
@@ -280,7 +280,7 @@ contract("Car Rental", function (accounts) {
           it("should return the expected addresses", async () => {
             await instance.rentCar(uid, drivername, drivinglicenseid,  datetime, { from: bob, value: deposit });
             await instance.rentCar(uid, drivername, drivinglicenseid,  datetime, { from: alice, value: deposit });
-            const result = await proxyInstance.fetchContractsByProxy.call(instance.address);
+            const result = await pchestraInstance.fetchRentalsFromProxy.call(instance.address);
             console.log(result);
             assert.equal(
               result.length,

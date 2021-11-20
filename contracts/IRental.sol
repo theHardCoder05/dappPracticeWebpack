@@ -13,5 +13,5 @@ interface IRental {
     // fetch Rental 
     function fetchRental(address payable _renter) external view returns (uint,uint,uint,uint,address payable,uint,uint);
     // Get all rentals(struct) and count
-    function fetchRentals() external view returns (address[] memory, uint);
+    function fetchRentals() external view returns (address[] calldata, uint);
 }

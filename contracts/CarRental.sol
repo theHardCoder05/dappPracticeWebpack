@@ -1,35 +1,41 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.3;
 
-import './IRental.sol';
+
 import '@openzeppelin/contracts/access/Ownable.sol';
 import '@openzeppelin/contracts/access/AccessControl.sol';
 import '@openzeppelin/contracts/utils/Counters.sol';
 import '@openzeppelin/contracts/security/ReentrancyGuard.sol';
+import './IRental.sol';
+import './ICar.sol';
+
 /**
 The abstract of the Smart Contract is to achieve disintermidiation objective. Drivers keep thier deposit in crypto (eth) in the Escrow Smart Contract.
 This project potentially involves multiple entities and authoritises for due-diligent process. Such as KYC.
  */
-contract CarRental is IRental, Ownable, AccessControl, ReentrancyGuard {
+contract CarRental is  Ownable, AccessControl, ReentrancyGuard, IRental, ICar {
 
     /*
     Use the Counter API to generate rental id.
      */
     using Counters for Counters.Counter;
     Counters.Counter private _rentalId;
-
+    Counters.Counter private _carId;
     /*
     Define a withdrawer role in this contract
      */
     bytes32 public constant WITHDRAWER_ROLE = keccak256("WITHDRAWER_ROLE");
-   
+    bytes32 public constant OPERATOR_ROLE = keccak256("OPERATOR_ROLE");
     /*
     Array list to store all drivers
      */
     // https://ethereum.stackexchange.com/questions/62824/how-can-i-build-this-list-of-addresses
     address[] public Drivers;
     
-
+    /*
+    Cars array list
+     */
+    Car[] public Cars;
     /*
     Enumeration of Rental contract's state to determine the contract status.
      */
@@ -38,9 +44,17 @@ contract CarRental is IRental, Ownable, AccessControl, ReentrancyGuard {
     /*
     Auto generated ID - Potentially, could use ChainLink(Oracle).
      */
-    uint rentalId;
+    uint  private rentalId;
     
     /*
+
+    /*
+    Auto generated ID - Potentially, could use ChainLink(Oracle).
+     */
+    uint  private carId;
+    
+    /*
+
     Constant value for Rental contract duration - 2 weeks - Pontentially for TimeLockedControl
      */
     uint constant Duration = 14;
@@ -78,9 +92,22 @@ contract CarRental is IRental, Ownable, AccessControl, ReentrancyGuard {
     Event log for withdraw fund upon car returned
      */
     event LogWithdraw(address render, uint deposit);
+
+    /**
+    event log for fallback function trigger
+     */
+     event LogFallback(address caller, string message);
  
      /*
-      Rental Struct Object/Entity
+      @notice: Rental Struct Object/Entity
+      @param: id - unique id
+      @param: datetime - Concract created datetime in Epoch time format.
+      @param: driver name - Driver name
+      @param: driving License Id - In Bytes32 hash value - Anonymouse(GDPR).
+      @param: duration - Renting period.
+      @param: deposit - deposit for renting. Technically the price should based on the car model and capacity.
+      @param: cid - The Car id
+      @param: State - To determine th current of the Rental contract.
      */
    
     struct Rental {
@@ -94,6 +121,7 @@ contract CarRental is IRental, Ownable, AccessControl, ReentrancyGuard {
         uint cid;
         RentalState state;
     }
+
 
    
     /*
@@ -140,6 +168,12 @@ contract CarRental is IRental, Ownable, AccessControl, ReentrancyGuard {
     }
 
     
+    /*
+    @notice - A non-payable callback function to handle miscalled functions.
+    */
+    fallback() external {
+        emit LogFallback(msg.sender, "Fallback was called!!!");
+    }
 
 
 /*
@@ -220,6 +254,34 @@ return (rid, datetime, duration, deposit, renter,cid,state);
 function fetchRentals() external override view returns (address[] memory, uint){
 
     return (Drivers, Drivers.length);
+}
+
+
+/*
+@notice: - Add a new car to the list
+@param: engineid - Car's Engine Id
+@param: name - Car model name
+*/
+function addNewCar(string memory _carName, uint _engineId) external override onlyOwner() returns (bool)
+{
+    _carId.increment();
+    carId = _carId.current();
+    Cars.push(Car({
+        id: carId,
+        engineId: _engineId,
+        name: _carName
+    }));
+    emit LogRentCar(rentalId);
+    return true;
+}
+
+
+/*
+@notice: A function to fetch all cars
+*/
+function fetchCars() external override view returns (Car[] memory)
+{
+    return Cars;
 }
 
 }

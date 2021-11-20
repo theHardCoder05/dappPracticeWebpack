@@ -4,9 +4,23 @@ pragma solidity ^0.8.3;
 // IRental inteface a blueprint of the Car class
 interface ICar {
 
+    /*
+    @notice: -A simple Car struct. This potentially can be an important struct to store FRID'Id, GPS, Engine's Id and etc.
+    @param: - Auto id
+    @param: Car's engine id
+    @params: Car model name
+    */
+
+    struct Car{
+        uint id;
+        uint engineId;
+        string name;
+    }
+
+
     // add new car function 
-    function addNewCar(string calldata _carName, uint _price, uint _uid, uint year) external returns(bool);
+    function addNewCar(string calldata _carName, uint engineId) external returns(bool);
 
     // fetch car in stock
-    function fetchCar(uint _uid) external view returns (uint, string memory , uint, uint, uint);
+    function fetchCars() external view returns (Car[] calldata);
 }
