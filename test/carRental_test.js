@@ -23,7 +23,7 @@ contract("Car Rental", function (accounts) {
     const datetime =  1636869118;
 
     let instance;
-    let proxyInstance;
+    let ochestraInstance;
     /*
      * Initiate Car Rental contract 
      */
@@ -36,7 +36,7 @@ contract("Car Rental", function (accounts) {
      * Initiate Proxy contract 
      */
     beforeEach(async () => {
-      pchestraInstance = await Ochestrator.new();
+      ochestraInstance = await Ochestrator.new();
      
     });
 
@@ -280,13 +280,27 @@ contract("Car Rental", function (accounts) {
           it("should return the expected addresses", async () => {
             await instance.rentCar(uid, drivername, drivinglicenseid,  datetime, { from: bob, value: deposit });
             await instance.rentCar(uid, drivername, drivinglicenseid,  datetime, { from: alice, value: deposit });
-            const result = await pchestraInstance.fetchRentalsFromProxy.call(instance.address);
+            const result = await ochestraInstance.fetchRentalsFromProxy.call(instance.address);
             console.log(result);
             assert.equal(
               result.length,
               2,
               "The count of the address should be 2",
             );
+           
+          });
+      
+        });
+
+
+        // Test to add a new car into the Smart Contract(Rental contract)
+        describe("Use case - To add a new car into the Rental contract ", () => {
+          it("should return true as expected result", async () => {
+            const carName = "Honda City";
+            const engineId = "001928399"
+            const result = await ochestraInstance.addNewCarUpgradeble.call(instance.address, carName, engineId);
+            console.log(result);
+     
            
           });
       

@@ -20,7 +20,7 @@ contract CarRental is  Ownable, AccessControl, ReentrancyGuard, IRental, ICar {
      */
     using Counters for Counters.Counter;
     Counters.Counter private _rentalId;
-    Counters.Counter private _carId;
+
     /*
     Define a withdrawer role in this contract
      */
@@ -262,12 +262,11 @@ function fetchRentals() external override view returns (address[] memory, uint){
 @param: engineid - Car's Engine Id
 @param: name - Car model name
 */
-function addNewCar(string memory _carName, uint _engineId) external override onlyOwner() returns (bool)
+function addNewCar(uint  _id, string memory _carName, uint _engineId) external override  returns (bool)
 {
-    _carId.increment();
-    carId = _carId.current();
+    
     Cars.push(Car({
-        id: carId,
+        id: _id,
         engineId: _engineId,
         name: _carName
     }));

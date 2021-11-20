@@ -17,9 +17,9 @@ interface ICar {
         string name;
     }
 
-
+   
     // add new car function 
-    function addNewCar(string calldata _carName, uint engineId) external returns(bool);
+    function addNewCar(uint _id, string calldata _carName, uint engineId) external returns(bool);
 
     // fetch car in stock
     function fetchCars() external view returns (Car[] calldata);
