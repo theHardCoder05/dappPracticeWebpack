@@ -40,7 +40,7 @@ const App = {
       // this.monitorAccount();
       this.getEtherPrice();
       this.getAddresses();
-        var intervalID = setInterval(getPrice, 5000);
+        var intervalID = setInterval(getPrice, 1000);
         
          
         const depositHelp = document.getElementById("pricerate");
@@ -99,7 +99,7 @@ const App = {
     const result = await price.json();
     console.log(result.data['amount']);
     const depositHelp = document.getElementById("pricerate");
-    depositHelp.outerText = "The current rate(USD) is : $" + result.data['amount'];
+    depositHelp.outerText = "1 USD to  : $" + result.data['amount'];
   },
 
   setStatus: function(message) {
