@@ -144,11 +144,11 @@ contract CarRental is IRental, Ownable, AccessControl, ReentrancyGuard {
 
 /*
  @notice Car renting function 
- @ uid - Unique id of the vehicle (It can be registration number or RFID)
- @ driver name - Name of the driver. Calldata to optimise the gas.
- @ driving license id - Driving Identify of the driver, this information should be masked and hashed to compliance with GDPR.
- @ booking date - The exact booking date.
- @return - True. If no errors.
+ @param: uid - Unique id of the vehicle (It can be registration number or RFID)
+ @param:  driver name - Name of the driver. Calldata to optimise the gas.
+ @param:  driving license id - Driving Identify of the driver, this information should be masked and hashed to compliance with GDPR.
+ @param:  booking date - The exact booking date.
+ @param:  return - True. If no errors.
  */
 function rentCar(uint _uid,string calldata _drivername,bytes32 _drivinglicenseid, uint _datetime) external override payable canBook(msg.sender) isNotOwner(msg.sender)  returns(bool) {
     uint256 amount = msg.value;
@@ -177,9 +177,9 @@ function rentCar(uint _uid,string calldata _drivername,bytes32 _drivinglicenseid
 /*
  @notice Withdraw function
  To withdraw the correspondence fund to the particular driver based on the address.
- @ driver - The Driver
+ @param: driver - The Driver
  Require to check if the msg.sender has the permission/ role to perform withdraw.
- Return  - True. If no errors
+ @param: Return  - True. If no errors
  After the withdraw set the status back to Vacant for the next driver.
  */
 function withdraw(address payable driver) external override payable nonReentrant onlyOwner() IsRefundable(Rentals[driver].driver)  returns (bool){
@@ -195,8 +195,8 @@ function withdraw(address payable driver) external override payable nonReentrant
 }
 
 /*
-@notice Fetch Rental by driver's address(0x0)
-Return the Rental Struct object
+@notice: Fetch Rental by driver's address(0x0)
+@param: Return the Rental Struct object
  */
 function fetchRental(address payable driver) external override view  returns(uint rid, uint datetime, uint duration, uint deposit,address payable renter, uint cid, uint state) {
 
@@ -214,8 +214,8 @@ return (rid, datetime, duration, deposit, renter,cid,state);
 
 
 /*
-@notice Fetch all Rentals
-Return the Rental Struct object
+@notice: Fetch all Rentals
+@param: Return the Rental Struct object
  */
 function fetchRentals() external override view returns (address[] memory, uint){
 
