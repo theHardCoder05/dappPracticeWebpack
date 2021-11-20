@@ -180,6 +180,7 @@ function rentCar(uint _uid,string calldata _drivername,bytes32 _drivinglicenseid
  @ driver - The Driver
  Require to check if the msg.sender has the permission/ role to perform withdraw.
  Return  - True. If no errors
+ After the withdraw set the status back to Vacant for the next driver.
  */
 function withdraw(address payable driver) external override payable nonReentrant onlyOwner() IsRefundable(Rentals[driver].driver)  returns (bool){
     require(hasRole(WITHDRAWER_ROLE, msg.sender), " Withdrawer permission not granted.");

@@ -171,8 +171,6 @@ const App = {
     const { fetchRentals } = App.carSC.methods;
     const drivers = await fetchRentals().call();
     const driversList = document.getElementById("drivers");
-    console.log("Drivers:" + drivers[0]);
-    console.log("Drivers:" + drivers[1]);
     for (let i = 0; i < drivers[1]; i++){
       var opt = document.createElement('option');
       opt.value = i;

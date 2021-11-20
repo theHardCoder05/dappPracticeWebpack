@@ -19,11 +19,13 @@
  */
 
 const HDWallet = require('truffle-hdwallet-provider');
-const infuraKey = "fj4jll3k.....";
+
 
 const fs = require('fs');
 const mnemonic = fs.readFileSync(".secret").toString().trim();
-
+const infuraKey = fs.readFileSync(".key").toString().trim();
+console.log(mnemonic);
+console.log(infuraKey);
 module.exports = {
   /**
    * Networks define how you connect to your ethereum client and let you set the
@@ -45,7 +47,7 @@ module.exports = {
     development: {
      host: "127.0.0.1",     // Localhost (default: none)
      port: 8545,            // Standard Ethereum port (default: none)
-     network_id: "1337",       // Any network (default: none)
+     network_id: "*",       // Any network (default: none)
     },
     
     // develop: {

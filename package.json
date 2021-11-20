@@ -25,6 +25,8 @@
     "truffle-hdwallet-provider": "^1.0.17"
   },
   "devDependencies": {
-    "@openzeppelin/contracts": "^4.3.3"
+    "@openzeppelin/contracts": "^4.3.3",
+    "@openzeppelin/truffle-upgrades": "^1.11.0",
+    "chai": "^4.3.4"
   }
 }
