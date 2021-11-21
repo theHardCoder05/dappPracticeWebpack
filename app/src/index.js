@@ -17,15 +17,18 @@ const App = {
       const deployedNetwork = carRentalArtifact.networks[networkId];
       this.carSC = new web3.eth.Contract(
         carRentalArtifact.abi,
-        deployedNetwork.address,
+        // deployedNetwork && deployedNetwork.address,
+        '0x4590b1A0600EAE82950a2fbBC9Bf8756aF7B4251',
       );
+      console.log("asd" + process.env.address);
       console.log("This is the deployed Smart Contract address - {0}", deployedNetwork.address);
 
       // Factory Contract
       const deployedNetworkProxy = OchestratorArtifact.networks[networkId];
       this.Ochestrator = new web3.eth.Contract(
         OchestratorArtifact.abi,
-        deployedNetworkProxy.address,
+        // deployedNetwork && deployedNetwork.address,
+        '0xe36E57D865172F6E88E81081f22F1642020aFb78',
       );
       console.log("This is the deployed Proxy Smart Contract address - {0}", deployedNetworkProxy.address);
       // get accounts
@@ -36,8 +39,6 @@ const App = {
    
       const agent = document.getElementById("agent");
       agent.value = this.carSC._address;
-      //this.refreshBalance();
-      // this.monitorAccount();
       this.getEtherPrice();
       this.getAddresses();
         var intervalID = setInterval(getPrice, 1000);
