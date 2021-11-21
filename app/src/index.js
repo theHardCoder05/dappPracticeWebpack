@@ -205,6 +205,7 @@ window.addEventListener("load", function() {
     window.ethereum.on('accountsChanged', function (accounts) {
 
       driver.value = accounts[0];
+      window.location.reload();
      });
  
   } else {
