@@ -52,7 +52,7 @@ contract Ochestrator is Ownable  {
     function addNewCarUpgradeble(address _base, string memory carName, uint engineId) external onlyOwner() {
     _carId.increment();
     uint carId = _carId.current();
-    uint finalAutoId = SafeMath.mul(carId,3);
+    uint finalAutoId = SafeMath.mul(carId,1);
     (bool status, bytes memory returnData) = _base.call(abi.encodeWithSignature("addNewCar()",finalAutoId,  carName, engineId));
     require(status,"Failed to add a new car");
     emit LogAddNewCar(msg.sender, carId, carName, engineId);
