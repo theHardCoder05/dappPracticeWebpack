@@ -8,26 +8,27 @@ https://thehardcoder05.github.io/dappPracticeWebpack/
 
 ### Prerequisites
 
-- Node.js >= v14
+- Node.js 
 - Truffle and Ganache
-- Yarn
+- NPM
 - `git checkout master`
 
 ### Contracts
 
-- Run `yarn install` in project root to install Truffle build and smart contract dependencies
-- Run local testnet in port `7545` with an Ethereum client, e.g. Ganache
+- Run `npm install` in project root to install Truffle build and smart contract dependencies
+- Run local testnet in port `8545` with an Ethereum client, e.g. Ganache
 - `truffle migrate --network development`
 - `truffle console --network development`
-- Run tests in Truffle console: `test`
+- Run tests in Truffle console: `truffle test`
 - `development` network id is 1337, remember to change it in Metamask as well!
 
 ### Frontend
 
 - `cd client`
-- `yarn install`
-- `yarn start`
-- Open `http://localhost:3000`
+- To install the dependecies - `npm install`
+- To build artifacts - `npm run build`
+- To run the app - `npm run dev`
+- Open `http://localhost:8080`
 
 ### How to populate locally deployed contract with listings
 
