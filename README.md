@@ -30,27 +30,15 @@ https://thehardcoder05.github.io/dappPracticeWebpack/
 - To run the app - `npm run dev`
 - Open `http://localhost:8080`
 
-### How to populate locally deployed contract with listings
-
-- `truffle migrate --network development`
-- `truffle console --network development`
-- `let rr = await Rentals.deployed()`
-- Add two listings:
-- `rr.addProperty(web3.utils.toWei("0.00156"), "Hämeentie 77", "Duplex with a nice view", "https://google.com","https://www.hermannikuvia.fi/wp-content/uploads/Hameentie-77-sisapiha.jpg")`
-- `rr.addProperty(web3.utils.toWei("0.002"), "Mannerheimintie 30 A", "Duplex with a really bad view", "https://google.com","https://www.finna.fi/Cover/Show?id=hkm.HKMS000005%3Akm002zsb&index=0&size=large&source=Solr")`
-- Send ETH to local wallet: `web3.eth.sendTransaction({ from: "<your local address>", to: "<your local network wallet>", value: web3.utils.toWei("10") })`
-- `cd client && yarn start`
-- Open local ui from `http://localhost:3000`
-- Make sure your Metamask localhost network is in port `7545` and chain id is `1337`.
-- If you get `TXRejectedError` when sending a transaction, reset your Metamask account from Advanced settings.
 
 ## Screencast link
 
-https://youtu.be/enwECpgoQUg
+
+
 
 ## Public Ethereum wallet for certification:
 
-`0x109B58ED673Bb241d170b87e4F88c5f426781fC9`
+`0xA7D88AB5987b7837d9C6aE2A07f5df4575a502EB`
 
 ## Project description
 
