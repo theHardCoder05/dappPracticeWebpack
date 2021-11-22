@@ -11,6 +11,10 @@ const App = {
     const { web3 } = this;
 
     try {
+
+
+
+    
       
       // get contract instance
       const networkId = await web3.eth.net.getId();
@@ -20,10 +24,9 @@ const App = {
         // deployedNetwork && deployedNetwork.address,
         '0x4590b1A0600EAE82950a2fbBC9Bf8756aF7B4251',
       );
-      console.log("asd" + process.env.address);
       console.log("This is the deployed Smart Contract address - {0}", deployedNetwork.address);
 
-      // Factory Contract
+      // Ochestrator Contract
       const deployedNetworkProxy = OchestratorArtifact.networks[networkId];
       this.Ochestrator = new web3.eth.Contract(
         OchestratorArtifact.abi,
@@ -41,7 +44,7 @@ const App = {
       agent.value = this.carSC._address;
       this.getEtherPrice();
       this.getAddresses();
-        var intervalID = setInterval(getPrice, 1000);
+      setInterval(getPrice, 1000);
         
          
         const depositHelp = document.getElementById("pricerate");
