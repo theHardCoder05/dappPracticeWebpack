@@ -1,8 +1,8 @@
-# Final project - Automated rental agreements
+# Final project - Decntralised Car Renting Platform
 
 ## Deployed version url:
 
-https://final-project-jsur.vercel.app
+https://thehardcoder05.github.io/dappPracticeWebpack/
 
 ## How to run this project locally:
 
