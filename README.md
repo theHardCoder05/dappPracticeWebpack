@@ -1,4 +1,4 @@
-# Final project - Decntralised Cars Renting Platform
+# Final project - Decentralised Cars Renting Platform
 
 ## Deployed version url:
 
