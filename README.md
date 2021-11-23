@@ -40,7 +40,7 @@ https://thehardcoder05.github.io/dappPracticeWebpack/
 
 `0xA7D88AB5987b7837d9C6aE2A07f5df4575a502EB`
 
-## Project description
+## Description
 
 User and apartment owner enter an agreement for renting a property, i.e. exchanging usage rights to an apartment for as long as payments are made to a specific Ethereum account before the agreed deadline.
 
@@ -49,16 +49,15 @@ User receives a keycode / access token to the apartment after first payment. If 
 - Checking for received payments and transferring ownership back to owner on non-payment cases could be scheduled with e.g. Gelato Network (https://docs.gelato.network/tutorial).
 - Opening door locks could be done with an app with smart locks, e.g. https://api.getkisi.com/docs. Smart lock APIs won't be explored in this project.
 
-## Simple workflow
-
-1. Enter service web site
-2. Login with Metamask
-3. Browse apartments
-4. Select apartment
-5. Agree on contract, pay first installment with Metamask (smart contract call)
-6. Tenantship is transferred to user account (smart contract call)
-7. Receive key phrase / token / OTP / etc. to access apartment with smart lock app (this part will be mocked in project)
-
+## Workflow
+### Booking workflow
+1. Navigate to the Application URL
+2. MetaMask prompts to user for login
+3. Ensure your MetaMask's address(0x0) showing in the Driver's address field approriately.
+4. Entering your Personal Information such as Full name and Driving License Id - The Driving Identify Id will be stored as hash value for GDPR compliance. (In the LIVE production version this information should handle by legitimate KYC process).
+5. Enter the desire days to rent with the exact deposit amount.
+6. Hit "Book Me" button in a few minutes later you shall receive SMS or email regarding the booking confirmation(In phase 3).
+7. 
 ## Scheduled workflow for late payments (Not implemented)
 
 1. Run scheduled contract weekly (Gelato? https://docs.gelato.network/tutorial)
