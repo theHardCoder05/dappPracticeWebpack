@@ -56,14 +56,19 @@ User receives a keycode / access token to the apartment after first payment. If 
 3. Ensure your MetaMask's address(0x0) showing in the Driver's address field approriately.
 4. Entering your Personal Information such as Full name and Driving License Id - The Driving Identify Id will be stored as hash value for GDPR compliance. (In the LIVE production version this information should handle by legitimate KYC process).
 5. Enter the desire days to rent with the exact deposit amount.
-6. Hit "Book Me" button in a few minutes later you shall receive SMS or email regarding the booking confirmation(In phase 3).
-7. 
-## Scheduled workflow for late payments (Not implemented)
+6. Hit "Book Me" button in a few minutes later you shall receive SMS or email regarding the booking confirmation(In phase 3). To inform about collecting the car key.
+7. Enjoy your ride!!!!
 
-1. Run scheduled contract weekly (Gelato? https://docs.gelato.network/tutorial)
-2. Check for made payments for each rental agreement (from renter wallet to owner wallet)
-3. If last payment is late 7 days, send reminder
-4. If last payment is late >= 30 days, remove tenant. Revoke user token access rights to apartment smart lock.
+### Withdraw workflow
+1. Agent to withdraw or refund back the Driver if and only if the Driver didn't violate traffic rules or met any accident.
+2. The Withdraw amount should be the 70% of the total amount of the deposit; 30% is the renting fee charge. 
+3. Greets to the Driver and see you soon!!
+
+
+## Functions to be implemented(In next phases)
+
+1. 
+
 
 ## Directory structure
 
@@ -72,15 +77,9 @@ User receives a keycode / access token to the apartment after first payment. If 
 - `migrations`: Migration files for deploying contracts in `contracts` directory.
 - `test`: Tests for smart contracts.
 
-## Environment variables (not needed for running project locally)
+## Sensitive Information
 
-```
-ROPSTEN_INFURA_PROJECT_ID=
-ROPSTEN_MNEMONIC=
-```
+- .key file - Infura Gateway's Project Id
+- .secret - MetaMask Mnemonic key
 
-## TODO features
 
-- Tenant payments tracking
-- Tenant removal
-- Fund withdrawal
