@@ -215,8 +215,9 @@ contract("Car Rental", function (accounts) {
           await instance.rentCar(uid, drivername, drivinglicenseid,   datetime, { from: bob, value: deposit });
           const tx = await instance.withdraw(bob ,{ from: _owner });
           const Rentalresult = await instance.fetchRental.call(bob);
-          let SCBalanceAfter = await web3.eth.getBalance(instance.address)
-
+          let SCBalanceAfter = await web3.eth.getBalance(instance.address);
+          let BobBalance = await web3.eth.getBalance(bob);
+          console.log('Bob balance:' + BobBalance);
           if (tx.logs[0].event == "LogWithdraw") {
             eventEmitted = true;
           }
@@ -226,10 +227,16 @@ contract("Car Rental", function (accounts) {
             true,
             "adding an item should emit a Shipped event",
           );
+          // The remaining deposit amount in the Agent contract is 300(30% of 1000)
           assert.equal(
             SCBalanceAfter,
-            0,
+            300,
             "the deposit after withdraw does not match the expected value",
+           );
+           assert.equal(
+            BobBalance,
+            (+BobBalance + +700),
+            "Bob should receive 700 back from refund",
            );
           assert.equal(
             Rentalresult[3],

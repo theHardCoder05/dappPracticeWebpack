@@ -5,6 +5,7 @@ pragma solidity ^0.8.3;
 import '@openzeppelin/contracts/access/Ownable.sol';
 import '@openzeppelin/contracts/access/AccessControl.sol';
 import '@openzeppelin/contracts/utils/Counters.sol';
+import '@openzeppelin/contracts/utils/math/SafeMath.sol';
 import '@openzeppelin/contracts/security/ReentrancyGuard.sol';
 import './IRental.sol';
 import './ICar.sol';
@@ -20,7 +21,10 @@ contract CarRental is  Ownable, AccessControl, ReentrancyGuard, IRental, ICar {
      */
     using Counters for Counters.Counter;
     Counters.Counter private _rentalId;
-
+    /*
+    Using Safe Math
+     */
+    using SafeMath for uint;
     /*
     Define a withdrawer role in this contract
      */
@@ -215,13 +219,19 @@ function rentCar(uint _uid,string calldata _drivername,bytes32 _drivinglicenseid
  Require to check if the msg.sender has the permission/ role to perform withdraw.
  @param: Return  - True. If no errors
  After the withdraw set the status back to Vacant for the next driver.
+ @notice - A very simple Mathematics calculation here. The DepositAmount div by 100 -> x mul 30% -> DepositAmount sub x = refundAmount.
+ @notice - In a nutshell - The Agent charge 30% for the total amount of car renting deposit. 30% to Agent and 70% back to Driver.
  */
 function withdraw(address payable driver) external override payable nonReentrant onlyOwner() IsRefundable(Rentals[driver].driver)  returns (bool){
     require(hasRole(WITHDRAWER_ROLE, msg.sender), " Withdrawer permission not granted.");
     uint withdrawAmount = Rentals[driver].deposit;
     Rentals[driver].deposit = 0;
-    
-    bool result = driver.send(withdrawAmount);
+    uint  hundred = 100;
+    uint thirdtyPrecentChargeFee = 30;
+    uint divideValue = SafeMath.div(withdrawAmount,hundred);
+    uint multiplyValue = SafeMath.mul(divideValue,thirdtyPrecentChargeFee);
+    uint refundAmount = SafeMath.sub(withdrawAmount,multiplyValue);
+    bool result = driver.send(refundAmount);
     require(result, "Withdraw failed");
     Rentals[driver].state = RentalState.Vacant;
     emit LogWithdraw(driver, withdrawAmount);

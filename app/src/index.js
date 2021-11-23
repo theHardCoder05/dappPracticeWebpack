@@ -11,11 +11,6 @@ const App = {
     const { web3 } = this;
 
     try {
-
-
-
-    
-      
       // get contract instance
       const networkId = await web3.eth.net.getId();
       const deployedNetwork = carRentalArtifact.networks[networkId];
