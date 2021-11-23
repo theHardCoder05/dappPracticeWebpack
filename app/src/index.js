@@ -21,8 +21,8 @@ const App = {
       const deployedNetwork = carRentalArtifact.networks[networkId];
       this.carSC = new web3.eth.Contract(
         carRentalArtifact.abi,
-        // deployedNetwork && deployedNetwork.address,
-        '0x4590b1A0600EAE82950a2fbBC9Bf8756aF7B4251',
+        deployedNetwork && deployedNetwork.address,
+        //'0x4590b1A0600EAE82950a2fbBC9Bf8756aF7B4251',
       );
       console.log("This is the deployed Smart Contract address - {0}", deployedNetwork.address);
 
@@ -30,8 +30,8 @@ const App = {
       const deployedNetworkProxy = OchestratorArtifact.networks[networkId];
       this.Ochestrator = new web3.eth.Contract(
         OchestratorArtifact.abi,
-        // deployedNetwork && deployedNetwork.address,
-        '0xe36E57D865172F6E88E81081f22F1642020aFb78',
+        deployedNetwork && deployedNetwork.address,
+        //'0xe36E57D865172F6E88E81081f22F1642020aFb78',
       );
       console.log("This is the deployed Proxy Smart Contract address - {0}", deployedNetworkProxy.address);
       // get accounts
@@ -44,6 +44,8 @@ const App = {
       agent.value = this.carSC._address;
       this.getEtherPrice();
       this.getAddresses();
+
+      
       setInterval(getPrice, 1000);
         
          
@@ -103,7 +105,7 @@ const App = {
     const result = await price.json();
     console.log(result.data['amount']);
     const depositHelp = document.getElementById("pricerate");
-    depositHelp.outerText = "1 USD to  : $" + result.data['amount'];
+    depositHelp.outerText = "1 Ether to USD  : $" + result.data['amount'];
   },
 
   setStatus: function(message) {
@@ -115,15 +117,14 @@ const App = {
   // Convert date to Epoch 
   // Masked and hashed the driving license id for security purpose
   rentCar: async () => {
-    const carId = document.getElementById("carId").value.trim();
 
+    const carId = document.getElementById("carId").value.trim();
     const driverName = document.getElementById("dname").value.trim();
     const rentDate = Math.round(new Date(document.getElementById("rentdate").value).getTime() / 1000.0);
     const deposit = document.getElementById("depositamount").value;
     const drivername = document.getElementById("dname").value;
     const drivinglicenseid = document.getElementById("dlilcenseid").value;
-    console.log(App.hashFunction(drivinglicenseid));
-
+    
     if (carId == "") {
       alert('Please pick a car');
       return false;
@@ -132,10 +133,10 @@ const App = {
       alert('Driver name cannot be blank');
       return false;
     } 
-    if (deposit == "") {
-      alert('Deposit cannot be blank');
-      return false;
-    } 
+    // if (deposit == "") {
+    //   alert('Deposit cannot be blank');
+    //   return false;
+    // } 
     if (drivinglicenseid == "") {
       alert('Driving License Id cannot be blank');
       return false;
@@ -156,6 +157,19 @@ const App = {
 
   },
 
+
+// Date function - To compare dates 
+ setPrice: async () => {
+  const toDate = new Date(document.getElementById("rentdate").value);
+  const today = new Date();
+  const diffTime = Math.abs(toDate - today);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+  const totalEther = diffDays * 0.001;
+  const price = await fetch('https://api.coinbase.com/v2/prices/ETH-USD/buy');
+  const result = await price.json();
+  document.getElementById("depositamount").value = totalEther;
+  document.getElementById("priceinusd").value = Math.round(totalEther * result.data['amount']);
+ },
 
   // Withdraw fund to driver
   withdraw: async () => {

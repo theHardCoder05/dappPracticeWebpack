@@ -22,7 +22,8 @@
     <div class="container">
     
       <h1 class="display-1">Car Rental DApp</h1>
-      <h1 class="display-4">Enjoy your journey!</h1>
+      <h1 class="display-6"><i>Per day rate as low as 0.001 ether</i></h1>
+      <!-- <h1 class="display-4">Enjoy your journey!</h1> -->
       <div class="row">
         <div class="col-6">
           <b><label for="name" >Car Model:</label></b>
@@ -36,12 +37,15 @@
           <input type="text" class="form-control" id="dname" required placeholder="ex: Jack Daniel"  >
           <b><label for="name" class="control-label">Driver License ID:</label></b>
           <input type="text" class="form-control" id="dlilcenseid" required placeholder="ex:A-98776-001"  >
-          <b><label for="rentdate" class="control-label" >Rent Date:</label></b>
-          <input type="date"  class="form-control" required id="rentdate" name="rentdate" >
+          <b><label for="rentdate" class="control-label" >To Date:</label></b>
+          <input type="date"  class="form-control" required id="rentdate" name="rentdate" onchange="App.setPrice(event);">
           <b><label for="depositamount" class="control-label">Deposit  Amount:</label></b>
           <label for="depositamount" id="pricerate"></label>
-          <input type="number"  class="form-control" id="depositamount" required name="depositamount" placeholder="ether">
           <small id="depositHelp" class="form-text text-muted">The ($)amount you pay in MetaMask.</small>
+          <input type="number"  class="form-control" id="depositamount" readonly required name="depositamount" placeholder="ether">
+          <small id="depositHelp" class="form-text text-muted">Price in USD</small>
+          <input type="number"  class="form-control" id="priceinusd" readonly required name="priceinusd" placeholder="usd">
+          
           <br>
           <button type="button"  onclick="App.reset()"  class="btn btn-secondary">Clear</button>
           <button type="button" onclick="App.rentCar()" class="btn btn-warning">Book Me!</button>
